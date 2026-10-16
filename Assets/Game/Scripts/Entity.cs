@@ -21,7 +21,6 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected Texture2D spriteSheet;
     [SerializeField] protected Texture2D shadowTexture;
     [SerializeField] protected Direction facingDirection = Direction.Down;
-    [SerializeField] int sortingOrder = 10;
 
     [Header("Movement")]
     [SerializeField] protected float speed = 250f / 64f; // 250 px/s in pygame, 64 px per tile
@@ -32,6 +31,7 @@ public abstract class Entity : MonoBehaviour
 
     readonly Dictionary<string, Sprite[]> frames = new Dictionary<string, Sprite[]>();
     SpriteRenderer spriteRenderer;
+    SortingGroup sortingGroup;
     float frameIndex;
 
     protected virtual void Awake()
@@ -67,7 +67,8 @@ public abstract class Entity : MonoBehaviour
     {
         var group = gameObject.GetComponent<SortingGroup>();
         if (group == null) group = gameObject.AddComponent<SortingGroup>();
-        group.sortingOrder = sortingOrder;
+        sortingGroup = group;
+        UpdateYSort();
         spriteRenderer.sortingOrder = 1;
 
         var shadow = new GameObject("Shadow");
@@ -77,6 +78,22 @@ public abstract class Entity : MonoBehaviour
         var shadowRenderer = shadow.AddComponent<SpriteRenderer>();
         shadowRenderer.sprite = Sprite.Create(shadowTexture, new Rect(0, 0, shadowTexture.width, shadowTexture.height), new Vector2(0.5f, 0.5f), TileSize);
         shadowRenderer.sortingOrder = 0;
+    }
+
+    // y_sort = rect.centery; the transform sits at the sprite centre
+    protected void UpdateYSort()
+    {
+        sortingGroup.sortingOrder = WorldSorting.Main(WorldSorting.PixelsFromUnityY(transform.position.y));
+    }
+
+    // hitbox = rect.inflate(-rect.width / 2, -60): 64x68 px around the sprite centre
+    protected Rect Hitbox
+    {
+        get
+        {
+            var size = new Vector2(64f / TileSize, 68f / TileSize);
+            return new Rect((Vector2)transform.position - size / 2f, size);
+        }
     }
 
     protected void Animate(float dt)

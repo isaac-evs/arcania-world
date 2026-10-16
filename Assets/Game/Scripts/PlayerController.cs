@@ -22,11 +22,39 @@ public class PlayerController : Entity
 
     void Move(float dt)
     {
-        transform.position += (Vector3)(direction * speed * dt);
+        transform.position += new Vector3(direction.x * speed * dt, 0, 0);
+        Collisions(horizontal: true);
+
+        transform.position += new Vector3(0, direction.y * speed * dt, 0);
+        Collisions(horizontal: false);
+    }
+
+    // Same axis-by-axis resolution as Player.collisions in entities.py (touching edges don't count as a hit)
+    void Collisions(bool horizontal)
+    {
+        foreach (var rect in WorldColliders.Rects)
+        {
+            var hitbox = Hitbox;
+            if (!hitbox.Overlaps(rect)) continue;
+
+            var pos = transform.position;
+            if (horizontal)
+            {
+                if (direction.x > 0) pos.x = rect.xMin - hitbox.width / 2f;
+                if (direction.x < 0) pos.x = rect.xMax + hitbox.width / 2f;
+            }
+            else
+            {
+                if (direction.y > 0) pos.y = rect.yMin - hitbox.height / 2f; // moving up: top edge stops at the rect's bottom
+                if (direction.y < 0) pos.y = rect.yMax + hitbox.height / 2f;
+            }
+            transform.position = pos;
+        }
     }
 
     void Update()
     {
+        UpdateYSort();
         if (!blocked)
         {
             ReadInput();
