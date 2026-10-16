@@ -35,7 +35,7 @@ public class PlayerController : Entity
         foreach (var rect in WorldColliders.Rects)
         {
             var hitbox = Hitbox;
-            if (!hitbox.Overlaps(rect)) continue;
+            if (!WorldColliders.Overlap(hitbox, rect)) continue;
 
             var pos = transform.position;
             if (horizontal)
