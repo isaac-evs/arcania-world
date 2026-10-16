@@ -17,11 +17,14 @@ public class OverworldCharacters : MonoBehaviour
     [SerializeField] Texture2D shadowTexture;
 
     PlayerController player;
+    DialogSystem dialogSystem;
     readonly List<Character> spawned = new List<Character>();
 
     void Start()
     {
         player = FindFirstObjectByType<PlayerController>();
+        dialogSystem = FindFirstObjectByType<DialogSystem>();
+        if (dialogSystem == null) Debug.LogWarning("No Dialog System in the scene: add one to the world object");
 
         foreach (var layer in GetComponentsInChildren<SuperObjectLayer>())
         {
@@ -68,23 +71,10 @@ public class OverworldCharacters : MonoBehaviour
         character.radius = float.Parse(Property(props, "radius"), System.Globalization.CultureInfo.InvariantCulture);
         character.data = data;
         character.player = player;
-        character.createDialog = ShowDialogPlaceholder;
+        character.createDialog = dialogSystem != null ? (Action<Character>)dialogSystem.CreateDialog : null;
         character.earlierCharacters = new List<Character>(spawned); // Python only knows the characters created before this one
         spawned.Add(character);
         go.SetActive(true);
-    }
-
-    // TODO: replace with the real dialog box. For now it prints the lines and lets the player go again after a moment.
-    void ShowDialogPlaceholder(Character character)
-    {
-        StartCoroutine(PlaceholderDialog(character));
-    }
-
-    IEnumerator PlaceholderDialog(Character character)
-    {
-        Debug.Log($"[{character.characterId}] says: {string.Join(" / ", character.data.dialogDefault)}");
-        yield return new WaitForSeconds(2f);
-        player.Unblock();
     }
 
     static string Property(SuperCustomProperties props, string name)

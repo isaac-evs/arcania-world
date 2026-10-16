@@ -8,7 +8,6 @@ public class Character : Entity
     const float TileSize = 64f;
     const float LookAroundInterval = 1.5f; // Timer(1500, repeat = True)
     const float NoticeDelay = 0.5f;        // Timer(500, func = self.start_move)
-    const float ViewTolerance = 30f / TileSize; // check_connections(..., tolerance = 30)
 
     [HideInInspector] public string characterId;
     [HideInInspector] public float radius; // pixels, like the 'radius' property in the map
@@ -60,7 +59,7 @@ public class Character : Entity
 
     void Raycast()
     {
-        if (CheckConnections(radius / TileSize) && HasLineOfSight() && !hasMoved && !hasNoticed)
+        if (CheckConnections(radius, this, player) && HasLineOfSight() && !hasMoved && !hasNoticed)
         {
             player.Block();
             player.ChangeFacingDirection(transform.position);
@@ -70,22 +69,6 @@ public class Character : Entity
             player.noticed = true;
             // TODO: notice sound (audio isn't imported yet)
         }
-    }
-
-    // check_connections in support.py: the player is within the radius, in front of the character, and roughly in line with it
-    bool CheckConnections(float radiusUnits)
-    {
-        Vector2 relation = player.transform.position - transform.position;
-        if (relation.magnitude >= radiusUnits) return false;
-
-        switch (facingDirection)
-        {
-            case Direction.Left:  return relation.x < 0 && Mathf.Abs(relation.y) < ViewTolerance;
-            case Direction.Right: return relation.x > 0 && Mathf.Abs(relation.y) < ViewTolerance;
-            case Direction.Up:    return relation.y > 0 && Mathf.Abs(relation.x) < ViewTolerance;
-            case Direction.Down:  return relation.y < 0 && Mathf.Abs(relation.x) < ViewTolerance;
-        }
-        return false;
     }
 
     // has_los: nothing solid between the character and the player

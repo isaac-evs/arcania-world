@@ -134,6 +134,23 @@ public abstract class Entity : MonoBehaviour
             facingDirection = relation.y > 0 ? Direction.Up : Direction.Down;
     }
 
+    // check_connections in support.py: target is within radius (pixels), in front of entity and roughly in line with it
+    public static bool CheckConnections(float radiusPx, Entity entity, Entity target, float tolerancePx = 30f)
+    {
+        Vector2 relation = target.transform.position - entity.transform.position;
+        if (relation.magnitude * TileSize >= radiusPx) return false;
+
+        float tolerance = tolerancePx / TileSize;
+        switch (entity.facingDirection)
+        {
+            case Direction.Left:  return relation.x < 0 && Mathf.Abs(relation.y) < tolerance;
+            case Direction.Right: return relation.x > 0 && Mathf.Abs(relation.y) < tolerance;
+            case Direction.Up:    return relation.y > 0 && Mathf.Abs(relation.x) < tolerance;
+            case Direction.Down:  return relation.y < 0 && Mathf.Abs(relation.x) < tolerance;
+        }
+        return false;
+    }
+
     public void Block()
     {
         blocked = true;
