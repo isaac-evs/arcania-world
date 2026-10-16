@@ -3,7 +3,7 @@ using SuperTiled2Unity;
 using UnityEngine;
 
 // Port of the 'Objects', 'Collisions' and 'Monsters' (grass) parts of Game.setup in main.py.
-// Attach to the imported map root (the "world" object), next to OverworldAnimations.
+// Added to each imported map by MapLoader, which calls Build.
 public class OverworldObjects : MonoBehaviour
 {
     const float TileSize = 64f;
@@ -16,8 +16,11 @@ public class OverworldObjects : MonoBehaviour
     [SerializeField] bool addMissingRidges = true;
     [SerializeField] bool blockWater = true; // not in the Python game: the player can't walk into the water
 
-    void Awake()
+    bool isWorld; // the extra ridges, stairs and shorelines were made for the world map only
+
+    public void Build(bool isWorld)
     {
+        this.isWorld = isWorld;
         WorldColliders.Rects.Clear();
         WorldColliders.SightBlockers.Clear();
         borderRects.Clear();
@@ -30,10 +33,10 @@ public class OverworldObjects : MonoBehaviour
             else if (layer.name == "Water" && blockWater) SetupWater(layer);
         }
 
-        if (addMissingRidges) SetupExtraRidges();
+        if (isWorld && addMissingRidges) SetupExtraRidges();
 
         // The gaps in the original ridges are exactly as wide as the player's hitbox, so open them up a little
-        var stairs = ExtraCollisions.Stairs;
+        var stairs = isWorld ? ExtraCollisions.Stairs : new int[0];
         for (int i = 0; i < stairs.Length; i += 3)
         {
             bool vertical = stairs[i + 2] == 1;
@@ -101,7 +104,7 @@ public class OverworldObjects : MonoBehaviour
             AddCollider(obj.m_X, obj.m_Y, obj.m_Width, obj.m_Height);
 
         // ...plus the water and rocks of the Coast tiles around them, so the shore is where the player stops
-        var edges = ExtraCollisions.WaterEdges;
+        var edges = isWorld ? ExtraCollisions.WaterEdges : new int[0];
         for (int i = 0; i < edges.Length; i += 4)
             AddCollider(edges[i], edges[i + 1], edges[i + 2], edges[i + 3]);
     }

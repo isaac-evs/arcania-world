@@ -84,8 +84,8 @@
    <properties>
     <property name="change_direction" type="bool" value="true"/>
     <property name="character_id" value="px"/>
-    <property name="direction" value="right"/>
-    <property name="graphic" value="purple_girl"/>
+    <property name="direction" value="down"/>
+    <property name="graphic" value="grass_boss"/>
     <property name="radius" value="400"/>
    </properties>
    <point/>

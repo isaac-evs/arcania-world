@@ -151,6 +151,11 @@ public abstract class Entity : MonoBehaviour
         return false;
     }
 
+    public void SetFacing(Direction facing)
+    {
+        facingDirection = facing;
+    }
+
     public void Block()
     {
         blocked = true;

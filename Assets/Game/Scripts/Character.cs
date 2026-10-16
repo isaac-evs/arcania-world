@@ -13,6 +13,7 @@ public class Character : Entity
     [HideInInspector] public float radius; // pixels, like the 'radius' property in the map
     [HideInInspector] public TrainerData data;
     [HideInInspector] public bool canRotate = true;
+    [HideInInspector] public bool nurse; // character_id == 'Nurse': heals the player's monsters after the dialog
     [HideInInspector] public PlayerController player;
     [HideInInspector] public Action<Character> createDialog;
     [HideInInspector] public List<Character> earlierCharacters = new List<Character>(); // the other characters that existed when this one was created

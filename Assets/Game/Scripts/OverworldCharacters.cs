@@ -1,30 +1,26 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using SuperTiled2Unity;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 // Port of the 'Entities' part of Game.setup in main.py: places the trainers from the map.
-// Attach to the imported map root (the "world" object).
+// Added to each imported map by MapLoader, which calls Build.
 public class OverworldCharacters : MonoBehaviour
 {
     const float TileSize = 64f;
 
-    [SerializeField] Texture2D[] characterSheets;
-    [SerializeField] Texture2D shadowTexture;
-
+    Texture2D[] characterSheets;
+    Texture2D shadowTexture;
     PlayerController player;
     DialogSystem dialogSystem;
     readonly List<Character> spawned = new List<Character>();
 
-    void Start()
+    public void Build(Texture2D[] characterSheets, Texture2D shadowTexture, PlayerController player, DialogSystem dialogSystem)
     {
-        player = FindFirstObjectByType<PlayerController>();
-        dialogSystem = FindFirstObjectByType<DialogSystem>();
-        if (dialogSystem == null) Debug.LogWarning("No Dialog System in the scene: add one to the world object");
+        this.characterSheets = characterSheets;
+        this.shadowTexture = shadowTexture;
+        this.player = player;
+        this.dialogSystem = dialogSystem;
 
         foreach (var layer in GetComponentsInChildren<SuperObjectLayer>())
         {
@@ -61,14 +57,27 @@ public class OverworldCharacters : MonoBehaviour
         go.SetActive(false);
         go.transform.SetParent(transform, false);
         // Tiled: origin top-left, y down; the point is the centre of the sprite
-        go.transform.position = (Vector2)transform.position + new Vector2(obj.m_X / TileSize, -obj.m_Y / TileSize);
+        float tiledX = obj.m_X, tiledY = obj.m_Y;
+        if (name == "hospital2" && id == "Nurse")
+        {
+            // hospital2.tmx puts the nurse inside the counter's collision block (y 374), where the player can never get within the
+            // 100 px talking range. The hospital layouts are identical, so she stands where the first hospital's nurse does.
+            tiledX = 287.846f;
+            tiledY = 431.973f;
+        }
+        go.transform.position = (Vector2)transform.position + new Vector2(tiledX / TileSize, -tiledY / TileSize);
 
         go.AddComponent<SpriteRenderer>();
         var character = go.AddComponent<Character>();
-        var facing = (Direction)Enum.Parse(typeof(Direction), Property(props, "direction"), true);
+
+        // hospital2.tmx has a nurse without 'direction' and 'radius' (the Python game would crash on it), so default them
+        string facingName = Property(props, "direction");
+        var facing = (Direction)Enum.Parse(typeof(Direction), facingName == "" ? "down" : facingName, true);
         character.Setup(sheet, shadowTexture, facing);
         character.characterId = id;
-        character.radius = float.Parse(Property(props, "radius"), System.Globalization.CultureInfo.InvariantCulture);
+        string radiusText = Property(props, "radius");
+        character.radius = radiusText == "" ? 0f : float.Parse(radiusText, System.Globalization.CultureInfo.InvariantCulture);
+        character.nurse = id == "Nurse";
         character.data = data;
         character.player = player;
         character.createDialog = dialogSystem != null ? (Action<Character>)dialogSystem.CreateDialog : null;
@@ -81,21 +90,4 @@ public class OverworldCharacters : MonoBehaviour
     {
         return props != null && props.TryGetCustomProperty(name, out var property) ? property.m_Value : "";
     }
-
-#if UNITY_EDITOR
-    // Runs when the component is added (or via Reset in the component menu): fills the sheets and applies pixel-art import settings
-    void Reset()
-    {
-        shadowTexture = OverworldAnimations.LoadPixelArt("Assets/Game/graphics/other/shadow.png");
-
-        var sheets = new System.Collections.Generic.List<Texture2D>();
-        foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/Game/graphics/characters" }))
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            if (path.EndsWith("/player.png")) continue; // already set up by hand for the player
-            sheets.Add(OverworldAnimations.LoadPixelArt(path));
-        }
-        characterSheets = sheets.ToArray();
-    }
-#endif
 }

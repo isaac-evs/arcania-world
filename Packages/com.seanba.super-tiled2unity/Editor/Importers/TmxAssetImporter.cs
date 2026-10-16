@@ -370,7 +370,9 @@ namespace SuperTiled2Unity.Editor
             // Note that this method is re-entrant due to group layers
             foreach (XElement xNode in xMap.Elements())
             {
-                if (!xNode.GetAttributeAs<bool>("visible", true))
+                // Patched: Tiled's "visible" flag only hides tile layers. The Python game reads every object layer
+                // (Collisions, Transition, Entities...) whether it is visible in Tiled or not, so import them all.
+                if (!xNode.GetAttributeAs<bool>("visible", true) && xNode.Name != "objectgroup")
                 {
                     continue;
                 }

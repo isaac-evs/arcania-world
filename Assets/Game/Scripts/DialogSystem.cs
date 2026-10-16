@@ -5,7 +5,7 @@ using UnityEditor;
 #endif
 
 // Port of DialogTree / DialogSprite in dialog.py, plus the Space-to-talk part of Game.input in main.py.
-// Attach to the imported map root (the "world" object).
+// One per scene: MapLoader creates it if there is none.
 public class DialogSystem : MonoBehaviour
 {
     const float PixelsPerUnit = 64f;
@@ -27,6 +27,12 @@ public class DialogSystem : MonoBehaviour
     Sprite bubbleSprite;
 
     public bool Active => character != null;
+
+    // For a DialogSystem created from code (MapLoader), which can't use Reset to fill the font
+    public void Configure(Font dialogFont)
+    {
+        font = dialogFont;
+    }
 
     void Start()
     {

@@ -31,6 +31,9 @@ public class PlayerController : Entity
 
     IEnumerator Start()
     {
+        if (FindFirstObjectByType<MapLoader>() == null)
+            Debug.LogError("There is no Map Loader in the scene, so no map gets built (no collisions, water or characters). Create an empty object named 'Game', add the Map Loader component to it, and delete the 'world' object from the Hierarchy.");
+
         yield return null; // OverworldCharacters spawns them in its own Start
         characters = FindObjectsByType<Character>(FindObjectsSortMode.None);
         Debug.Log($"[PlayerController] static colliders: {WorldColliders.Rects.Count}, characters found: {characters.Length}");

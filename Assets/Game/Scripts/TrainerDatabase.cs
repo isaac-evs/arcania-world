@@ -138,7 +138,7 @@ public static class TrainerDatabase
             monsters = new[] { new MonsterEntry("Friolera", 25), new MonsterEntry("Gulfin", 20), new MonsterEntry("Atrox", 24), new MonsterEntry("Finiette", 30) },
             dialogDefault = new[] { "I love trees", "and fights" },
             dialogDefeated = new[] { "Good luck with the boss!" },
-            directions = new[] { Direction.Right },
+            directions = new[] { Direction.Down },
             lookAround = false,
             defeated = false,
             biome = "forest"

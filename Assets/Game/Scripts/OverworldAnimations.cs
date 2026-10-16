@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-// Port of the water + coast setup from main.py. Attach to the imported map root (the "world" object).
+// Port of the water + coast setup from main.py. Added to each imported map by MapLoader, which calls Build.
 // It reads the "Water" and "Coast" object layers that SuperTiled2Unity imported and spawns animated sprites.
 public class OverworldAnimations : MonoBehaviour
 {
@@ -21,8 +21,8 @@ public class OverworldAnimations : MonoBehaviour
         { "bottomleft", new Vector2Int(0, 2) }, { "bottom", new Vector2Int(1, 2) }, { "bottomright", new Vector2Int(2, 2) },
     };
 
-    [SerializeField] Texture2D[] waterFrames;
-    [SerializeField] Texture2D coastSheet;
+    Texture2D[] waterFrames;
+    Texture2D coastSheet;
     [SerializeField] float animationSpeed = 6f; // ANIMATION_SPEED in settings.py
     [SerializeField] int waterSortingOrder = -10; // below Terrain
     [SerializeField] int coastSortingOrder = 1;   // above Terrain, like WORLD_LAYERS['bg'] after the terrain
@@ -37,8 +37,14 @@ public class OverworldAnimations : MonoBehaviour
     Sprite[] waterSprites;
     int lastFrame = -1;
 
-    void Start()
+    bool built;
+
+    public void Build(Texture2D[] waterFrames, Texture2D coastSheet)
     {
+        this.waterFrames = waterFrames;
+        this.coastSheet = coastSheet;
+        built = true;
+
         waterSprites = new Sprite[waterFrames.Length];
         for (int i = 0; i < waterFrames.Length; i++)
             waterSprites[i] = CreateSprite(waterFrames[i], new Rect(0, 0, waterFrames[i].width, waterFrames[i].height));
@@ -127,6 +133,8 @@ public class OverworldAnimations : MonoBehaviour
 
     void Update()
     {
+        if (!built) return;
+
         // every sprite shares the same clock (frame_index += ANIMATION_SPEED * dt in AnimatedSprite)
         int frame = (int)(Time.time * animationSpeed);
         if (frame == lastFrame) return;
@@ -137,15 +145,6 @@ public class OverworldAnimations : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    // Runs when the component is added: fills the texture fields and applies pixel-art import settings
-    void Reset()
-    {
-        waterFrames = new Texture2D[4];
-        for (int i = 0; i < 4; i++)
-            waterFrames[i] = LoadPixelArt($"Assets/Game/graphics/tilesets/water/{i}.png");
-        coastSheet = LoadPixelArt("Assets/Game/graphics/tilesets/coast.png");
-    }
-
     public static Texture2D LoadPixelArt(string path)
     {
         // Sprite type avoids Unity rescaling non power of two textures (coast.png is 1536x768)
