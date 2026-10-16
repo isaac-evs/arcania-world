@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: 334562fc3edcd4de5bd893d71eaddfaa
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5470808807480215567
+    second: purple_girl_0
+  - first:
+      213: -105530537596546982
+    second: purple_girl_1
+  - first:
+      213: -7167554928632074516
+    second: purple_girl_2
+  - first:
+      213: -4712760096896176416
+    second: purple_girl_3
+  - first:
+      213: -2441939120853083929
+    second: purple_girl_4
+  - first:
+      213: 8483706036746819854
+    second: purple_girl_5
+  - first:
+      213: -7721499534942728613
+    second: purple_girl_6
+  - first:
+      213: -5573955326963463557
+    second: purple_girl_7
+  - first:
+      213: -925898174600900107
+    second: purple_girl_8
+  - first:
+      213: -2284665285514310272
+    second: purple_girl_9
+  - first:
+      213: -4104814593552753300
+    second: purple_girl_10
+  - first:
+      213: 3841001118098233663
+    second: purple_girl_11
+  - first:
+      213: 6173730077016955233
+    second: purple_girl_12
+  - first:
+      213: 5171269083724651003
+    second: purple_girl_13
+  - first:
+      213: -7242833042387168162
+    second: purple_girl_14
+  - first:
+      213: 827304234884829869
+    second: purple_girl_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: purple_girl_0
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 391
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f7301c0068c314b0800000000000000
+      internalID: -5470808807480215567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_1
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 383
+        width: 70
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a501a910984198ef0800000000000000
+      internalID: -105530537596546982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_2
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 391
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ceee8ca84cab78c90800000000000000
+      internalID: -7167554928632074516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_3
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 383
+        width: 70
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ee2ed049a9e89eb0800000000000000
+      internalID: -4712760096896176416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_4
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 259
+        width: 66
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e81c6abe4d7c1ed0800000000000000
+      internalID: -2441939120853083929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_5
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 259
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e09912b11bd2cb570800000000000000
+      internalID: 8483706036746819854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_6
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 259
+        width: 66
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5e056e4519b7d490800000000000000
+      internalID: -7721499534942728613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_7
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 259
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7a4276892555a2b0800000000000000
+      internalID: -5573955326963463557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_8
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 131
+        width: 66
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f11bbc048c8623f0800000000000000
+      internalID: -925898174600900107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_9
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 131
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08dc04a070d3b40e0800000000000000
+      internalID: -2284665285514310272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_10
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 131
+        width: 66
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6dd27a10e4c807c0800000000000000
+      internalID: -4104814593552753300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_11
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 131
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f399f1a9a2afd4530800000000000000
+      internalID: 3841001118098233663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_12
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 7
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1699db39bce7da550800000000000000
+      internalID: 6173730077016955233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_13
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 0
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf91e5545d904c740800000000000000
+      internalID: 5171269083724651003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_14
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 7
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e541d0dd8b94c7b90800000000000000
+      internalID: -7242833042387168162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: purple_girl_15
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 0
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da29c7181dc2b7b00800000000000000
+      internalID: 827304234884829869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      purple_girl_0: -5470808807480215567
+      purple_girl_1: -105530537596546982
+      purple_girl_10: -4104814593552753300
+      purple_girl_11: 3841001118098233663
+      purple_girl_12: 6173730077016955233
+      purple_girl_13: 5171269083724651003
+      purple_girl_14: -7242833042387168162
+      purple_girl_15: 827304234884829869
+      purple_girl_2: -7167554928632074516
+      purple_girl_3: -4712760096896176416
+      purple_girl_4: -2441939120853083929
+      purple_girl_5: 8483706036746819854
+      purple_girl_6: -7721499534942728613
+      purple_girl_7: -5573955326963463557
+      purple_girl_8: -925898174600900107
+      purple_girl_9: -2284665285514310272
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

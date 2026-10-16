@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: 1d8ea3b94a68b4e72b857926aa304506
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1613607178511967437
+    second: water_boss_0
+  - first:
+      213: -7695815126298601989
+    second: water_boss_1
+  - first:
+      213: 665204886547028990
+    second: water_boss_2
+  - first:
+      213: -575309225407877601
+    second: water_boss_3
+  - first:
+      213: -4293250181318951533
+    second: water_boss_4
+  - first:
+      213: -8222272320867975474
+    second: water_boss_5
+  - first:
+      213: -7249750273293120146
+    second: water_boss_6
+  - first:
+      213: 3354607736120168483
+    second: water_boss_7
+  - first:
+      213: 7827522518207990656
+    second: water_boss_8
+  - first:
+      213: 295576945384106610
+    second: water_boss_9
+  - first:
+      213: 465334761718110313
+    second: water_boss_10
+  - first:
+      213: -2900098363559558900
+    second: water_boss_11
+  - first:
+      213: 7913929890957407148
+    second: water_boss_12
+  - first:
+      213: -6959067365757817075
+    second: water_boss_13
+  - first:
+      213: -5013740110924083228
+    second: water_boss_14
+  - first:
+      213: 495751692682044155
+    second: water_boss_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: water_boss_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 387
+        width: 110
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc4e93afd2fa46610800000000000000
+      internalID: 1613607178511967437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_1
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 383
+        width: 106
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf5d4e3bae8f23590800000000000000
+      internalID: -7695815126298601989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_2
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 387
+        width: 110
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efb5d75e1584b3900800000000000000
+      internalID: 665204886547028990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_3
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 383
+        width: 106
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1eee8fbe471408f0800000000000000
+      internalID: -575309225407877601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_4
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 255
+        width: 86
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39d3a9ae4bf4b64c0800000000000000
+      internalID: -4293250181318951533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_5
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 255
+        width: 94
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ece332c33ee94ed80800000000000000
+      internalID: -8222272320867975474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_6
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 255
+        width: 86
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6d821a8986b36b90800000000000000
+      internalID: -7249750273293120146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_7
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 255
+        width: 86
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 320583866f5fd8e20800000000000000
+      internalID: 3354607736120168483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_8
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 127
+        width: 86
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08b88212242f0ac60800000000000000
+      internalID: 7827522518207990656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_9
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 127
+        width: 94
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27a2a617aa91a1400800000000000000
+      internalID: 295576945384106610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_10
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 127
+        width: 86
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96859d51083357600800000000000000
+      internalID: 465334761718110313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_11
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 127
+        width: 86
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c01475a57e7c0c7d0800000000000000
+      internalID: -2900098363559558900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_12
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 0
+        width: 110
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca3bcd75e4de3dd60800000000000000
+      internalID: 7913929890957407148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_13
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 110
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0fedfff91d6c6f90800000000000000
+      internalID: -6959067365757817075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_14
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 0
+        width: 110
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ef0e3cdeed9b6ab0800000000000000
+      internalID: -5013740110924083228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: water_boss_15
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 0
+        width: 110
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf2ac13b98341e600800000000000000
+      internalID: 495751692682044155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      water_boss_0: 1613607178511967437
+      water_boss_1: -7695815126298601989
+      water_boss_10: 465334761718110313
+      water_boss_11: -2900098363559558900
+      water_boss_12: 7913929890957407148
+      water_boss_13: -6959067365757817075
+      water_boss_14: -5013740110924083228
+      water_boss_15: 495751692682044155
+      water_boss_2: 665204886547028990
+      water_boss_3: -575309225407877601
+      water_boss_4: -4293250181318951533
+      water_boss_5: -8222272320867975474
+      water_boss_6: -7249750273293120146
+      water_boss_7: 3354607736120168483
+      water_boss_8: 7827522518207990656
+      water_boss_9: 295576945384106610
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

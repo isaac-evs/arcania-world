@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: 0683d5e51742c4f7885cee7f484a77c8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1037397627475568127
+    second: grass_boss_0
+  - first:
+      213: 6303936371825216794
+    second: grass_boss_1
+  - first:
+      213: 3653829427998393514
+    second: grass_boss_2
+  - first:
+      213: 516014321773534676
+    second: grass_boss_3
+  - first:
+      213: -6380567930841132022
+    second: grass_boss_4
+  - first:
+      213: 7800896680227971303
+    second: grass_boss_5
+  - first:
+      213: -8731734062761485615
+    second: grass_boss_6
+  - first:
+      213: 4816303864954855552
+    second: grass_boss_7
+  - first:
+      213: -3761298271597521074
+    second: grass_boss_8
+  - first:
+      213: 47640082722361207
+    second: grass_boss_9
+  - first:
+      213: -8022544267982114223
+    second: grass_boss_10
+  - first:
+      213: 2698880544628662559
+    second: grass_boss_11
+  - first:
+      213: 5900134987994455884
+    second: grass_boss_12
+  - first:
+      213: -5276652312268708687
+    second: grass_boss_13
+  - first:
+      213: 1915425570197989751
+    second: grass_boss_14
+  - first:
+      213: 2771920112514007131
+    second: grass_boss_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: grass_boss_0
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 391
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff5a38455a3956e00800000000000000
+      internalID: 1037397627475568127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_1
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 383
+        width: 66
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1d8e410bb41c7750800000000000000
+      internalID: 6303936371825216794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_2
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 391
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa486b5818205b230800000000000000
+      internalID: 3653829427998393514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_3
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 383
+        width: 70
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dd535caa40492700800000000000000
+      internalID: 516014321773534676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_4
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 259
+        width: 70
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0417f8c54ba377a0800000000000000
+      internalID: -6380567930841132022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_5
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 259
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e02382233a524c60800000000000000
+      internalID: 7800896680227971303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_6
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 259
+        width: 70
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1da5ce3f126a2d680800000000000000
+      internalID: -8731734062761485615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_7
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 259
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 080a9f8e8d2f6d240800000000000000
+      internalID: 4816303864954855552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_8
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 131
+        width: 70
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e479323762f2dcbc0800000000000000
+      internalID: -3761298271597521074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_9
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 131
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77f8cbf176049a000800000000000000
+      internalID: 47640082722361207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_10
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 131
+        width: 70
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15274185e723aa090800000000000000
+      internalID: -8022544267982114223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_11
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 131
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f11edc95e89547520800000000000000
+      internalID: 2698880544628662559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_12
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 7
+        width: 70
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4f5346e28d71e150800000000000000
+      internalID: 5900134987994455884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_13
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 0
+        width: 66
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b4eafbcda095c6b0800000000000000
+      internalID: -5276652312268708687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_14
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 7
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 779e9516865f49a10800000000000000
+      internalID: 1915425570197989751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grass_boss_15
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 0
+        width: 70
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b508824f7a6d77620800000000000000
+      internalID: 2771920112514007131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      grass_boss_0: 1037397627475568127
+      grass_boss_1: 6303936371825216794
+      grass_boss_10: -8022544267982114223
+      grass_boss_11: 2698880544628662559
+      grass_boss_12: 5900134987994455884
+      grass_boss_13: -5276652312268708687
+      grass_boss_14: 1915425570197989751
+      grass_boss_15: 2771920112514007131
+      grass_boss_2: 3653829427998393514
+      grass_boss_3: 516014321773534676
+      grass_boss_4: -6380567930841132022
+      grass_boss_5: 7800896680227971303
+      grass_boss_6: -8731734062761485615
+      grass_boss_7: 4816303864954855552
+      grass_boss_8: -3761298271597521074
+      grass_boss_9: 47640082722361207
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

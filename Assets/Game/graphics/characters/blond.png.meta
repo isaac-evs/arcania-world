@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: 02c5501c5f1d64695ac9358ea9a29b65
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7928931306396499924
+    second: blond_0
+  - first:
+      213: 3228328210562401807
+    second: blond_1
+  - first:
+      213: 7695593828430824049
+    second: blond_2
+  - first:
+      213: -5190866233242230888
+    second: blond_3
+  - first:
+      213: 4041394938074548617
+    second: blond_4
+  - first:
+      213: 1723734092634296568
+    second: blond_5
+  - first:
+      213: -1858107530719713440
+    second: blond_6
+  - first:
+      213: -7810486610845491625
+    second: blond_7
+  - first:
+      213: 5226865237545865166
+    second: blond_8
+  - first:
+      213: -8611338929857625024
+    second: blond_9
+  - first:
+      213: 843761929598598807
+    second: blond_10
+  - first:
+      213: 4919623918542030770
+    second: blond_11
+  - first:
+      213: 5061422950124256916
+    second: blond_12
+  - first:
+      213: 2902911308311369152
+    second: blond_13
+  - first:
+      213: 5656487739502486875
+    second: blond_14
+  - first:
+      213: -7383424405295660104
+    second: blond_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: blond_0
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 391
+        width: 74
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2043c17cf6c6f190800000000000000
+      internalID: -7928931306396499924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_1
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 383
+        width: 74
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f06c1f037635dcc20800000000000000
+      internalID: 3228328210562401807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_2
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 391
+        width: 74
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 172ce4f50dd3cca60800000000000000
+      internalID: 7695593828430824049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_3
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 383
+        width: 74
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89fd60bc9a656f7b0800000000000000
+      internalID: -5190866233242230888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_4
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 259
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 989cef0b84be51830800000000000000
+      internalID: 4041394938074548617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_5
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 259
+        width: 70
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f092b6460febe710800000000000000
+      internalID: 1723734092634296568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_6
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 259
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06729f4ab0da636e0800000000000000
+      internalID: -1858107530719713440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_7
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 259
+        width: 70
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75e1c952fc39b9390800000000000000
+      internalID: -7810486610845491625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_8
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 131
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecf42cc8d3e898840800000000000000
+      internalID: 5226865237545865166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_9
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 131
+        width: 70
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 044085d3ed06e7880800000000000000
+      internalID: -8611338929857625024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_10
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 131
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79ef8b82105a5bb00800000000000000
+      internalID: 843761929598598807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_11
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 131
+        width: 70
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b7863d73e3064440800000000000000
+      internalID: 4919623918542030770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_12
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 7
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49e7a284b59cd3640800000000000000
+      internalID: 5061422950124256916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_13
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 0
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c51d526476394820800000000000000
+      internalID: 2902911308311369152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_14
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 7
+        width: 70
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b55e56531a1ef7e40800000000000000
+      internalID: 5656487739502486875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blond_15
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 0
+        width: 70
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b307685f9ec88990800000000000000
+      internalID: -7383424405295660104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      blond_0: -7928931306396499924
+      blond_1: 3228328210562401807
+      blond_10: 843761929598598807
+      blond_11: 4919623918542030770
+      blond_12: 5061422950124256916
+      blond_13: 2902911308311369152
+      blond_14: 5656487739502486875
+      blond_15: -7383424405295660104
+      blond_2: 7695593828430824049
+      blond_3: -5190866233242230888
+      blond_4: 4041394938074548617
+      blond_5: 1723734092634296568
+      blond_6: -1858107530719713440
+      blond_7: -7810486610845491625
+      blond_8: 5226865237545865166
+      blond_9: -8611338929857625024
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

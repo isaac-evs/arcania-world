@@ -1,0 +1,548 @@
+fileFormatVersion: 2
+guid: 37bb021b86d7b4f91be6aca97502e866
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5114487734330184963
+    second: young_girl_0
+  - first:
+      213: 1180147494133503030
+    second: young_girl_1
+  - first:
+      213: -894088958556848037
+    second: young_girl_2
+  - first:
+      213: 3744873819984938391
+    second: young_girl_3
+  - first:
+      213: 2336879526066037066
+    second: young_girl_4
+  - first:
+      213: 1368310294120834058
+    second: young_girl_5
+  - first:
+      213: 8308435936584564119
+    second: young_girl_6
+  - first:
+      213: 6604713450236645317
+    second: young_girl_7
+  - first:
+      213: -2963704820635480911
+    second: young_girl_8
+  - first:
+      213: 8721759356912188741
+    second: young_girl_9
+  - first:
+      213: 109243033290275701
+    second: young_girl_10
+  - first:
+      213: -8265329084735733017
+    second: young_girl_11
+  - first:
+      213: -8996365712984131916
+    second: young_girl_12
+  - first:
+      213: -3720342654950856930
+    second: young_girl_13
+  - first:
+      213: -965704486299164939
+    second: young_girl_14
+  - first:
+      213: 2835239447807745680
+    second: young_girl_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: young_girl_0
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 391
+        width: 94
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 305d7d42f7f4af640800000000000000
+      internalID: 5114487734330184963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_1
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 383
+        width: 94
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 634156aa4e9b06010800000000000000
+      internalID: 1180147494133503030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_2
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 391
+        width: 94
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b50ce9b44de8793f0800000000000000
+      internalID: -894088958556848037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_3
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 383
+        width: 94
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 795ccd8e5e678f330800000000000000
+      internalID: 3744873819984938391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_4
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 259
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a41ac023c834e6020800000000000000
+      internalID: 2336879526066037066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_5
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 259
+        width: 66
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a04259f76f63df210800000000000000
+      internalID: 1368310294120834058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_6
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 259
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79d763fd67e7d4370800000000000000
+      internalID: 8308435936584564119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_7
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 259
+        width: 66
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cf8994c3e7a8ab50800000000000000
+      internalID: 6604713450236645317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_8
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 131
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bcc8e20b2eced6d0800000000000000
+      internalID: -2963704820635480911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_9
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 131
+        width: 66
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54db03ddce9e90970800000000000000
+      internalID: 8721759356912188741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_10
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 131
+        width: 66
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57bf371c5fb148100800000000000000
+      internalID: 109243033290275701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_11
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 131
+        width: 66
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e24f903df6ab4d80800000000000000
+      internalID: -8265329084735733017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_12
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 7
+        width: 94
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b6b3108c0d762380800000000000000
+      internalID: -8996365712984131916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_13
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 0
+        width: 94
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e17abe80110be5cc0800000000000000
+      internalID: -3720342654950856930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_14
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 7
+        width: 94
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fe1320e2e02992f0800000000000000
+      internalID: -965704486299164939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: young_girl_15
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 0
+        width: 94
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09e51cb814bc85720800000000000000
+      internalID: 2835239447807745680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      young_girl_0: 5114487734330184963
+      young_girl_1: 1180147494133503030
+      young_girl_10: 109243033290275701
+      young_girl_11: -8265329084735733017
+      young_girl_12: -8996365712984131916
+      young_girl_13: -3720342654950856930
+      young_girl_14: -965704486299164939
+      young_girl_15: 2835239447807745680
+      young_girl_2: -894088958556848037
+      young_girl_3: 3744873819984938391
+      young_girl_4: 2336879526066037066
+      young_girl_5: 1368310294120834058
+      young_girl_6: 8308435936584564119
+      young_girl_7: 6604713450236645317
+      young_girl_8: -2963704820635480911
+      young_girl_9: 8721759356912188741
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
