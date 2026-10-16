@@ -19,6 +19,7 @@ public class OverworldObjects : MonoBehaviour
     void Awake()
     {
         WorldColliders.Rects.Clear();
+        WorldColliders.SightBlockers.Clear();
         borderRects.Clear();
 
         foreach (var layer in GetComponentsInChildren<SuperObjectLayer>())
@@ -64,6 +65,8 @@ public class OverworldObjects : MonoBehaviour
                 continue;
             }
 
+            WorldColliders.SightBlockers.Add(MakeRect(obj.m_X, obj.m_Y - obj.m_Height, obj.m_Width, obj.m_Height));
+
             // CollidableSprite: y-sorted, and the hitbox is the rect shrunk to 40% of its height (inflate(0, -height * 0.6))
             float centerY = CenterY(obj);
             sr.sortingOrder = WorldSorting.Main(centerY);
@@ -77,7 +80,10 @@ public class OverworldObjects : MonoBehaviour
     {
         // BorderSprite: the Tiled rectangle itself (x, y is the top-left corner)
         foreach (var obj in layer.GetComponentsInChildren<SuperObject>())
+        {
             borderRects.Add(MakeRect(obj.m_X, obj.m_Y, obj.m_Width, obj.m_Height));
+            WorldColliders.SightBlockers.Add(MakeRect(obj.m_X, obj.m_Y, obj.m_Width, obj.m_Height));
+        }
     }
 
     // Not in the Python game: ridges that its Collisions layer leaves open (see ExtraCollisions.cs)

@@ -34,6 +34,17 @@ public abstract class Entity : MonoBehaviour
     SortingGroup sortingGroup;
     float frameIndex;
 
+    // For entities created from code: call this on an inactive GameObject, then activate it so Awake sees the textures
+    public void Setup(Texture2D sheet, Texture2D shadow, Direction facing)
+    {
+        spriteSheet = sheet;
+        shadowTexture = shadow;
+        facingDirection = facing;
+    }
+
+    public Rect HitboxRect => Hitbox;
+    public Direction FacingDirection => facingDirection;
+
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
