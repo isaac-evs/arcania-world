@@ -10,7 +10,7 @@ public class DialogSystem : MonoBehaviour
 {
     const float PixelsPerUnit = 64f;
     const int FontSize = 30;            // fonts['dialog'] in main.py
-    const int LineHeight = 37;          // font.get_height() of PixeloidSans at 30 px
+    const int LineHeight = 38;          // height of a rendered text surface of PixeloidSans at 30 px (its linesize)
     const int Padding = 5;
     const float TalkRadius = 100f;      // check_connections(100, player, character)
     const float InputLockTime = 0.5f;   // Timer(500): Space is ignored this long after a new line appears
@@ -19,6 +19,7 @@ public class DialogSystem : MonoBehaviour
     [SerializeField] Font font;
 
     PlayerController player;
+    MonsterIndex monsterIndex;
     Character character;               // the character we are talking to, null when there is no dialog
     string[] lines;
     int lineIndex;
@@ -47,7 +48,9 @@ public class DialogSystem : MonoBehaviour
         bool space = keyboard.spaceKey.wasPressedThisFrame;
 
         // Game.input: Space next to a character that you are facing starts a dialog
-        if (!Active && space)
+        // (not while the monster index is open: there Space picks up and drops monsters)
+        if (monsterIndex == null) monsterIndex = FindFirstObjectByType<MonsterIndex>();
+        if (!Active && space && (monsterIndex == null || !monsterIndex.IsOpen))
         {
             foreach (var other in FindObjectsByType<Character>(FindObjectsSortMode.None))
             {
