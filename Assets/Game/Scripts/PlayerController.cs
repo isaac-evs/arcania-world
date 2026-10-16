@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+// Port of Player in entities.py
+public class PlayerController : Entity
 {
-    [SerializeField] float speed = 250f / 64f; // pygame: 250 px/s, 64 px per tile
+    [HideInInspector] public bool noticed;
 
-    void Update()
+    void ReadInput()
     {
         var kb = Keyboard.current;
         if (kb == null) return;
@@ -16,6 +17,21 @@ public class PlayerController : MonoBehaviour
         if (kb.leftArrowKey.isPressed)  input.x -= 1;
         if (kb.rightArrowKey.isPressed) input.x += 1;
 
-        transform.position += (Vector3)(input.normalized * speed * Time.deltaTime);
+        direction = input.normalized;
+    }
+
+    void Move(float dt)
+    {
+        transform.position += (Vector3)(direction * speed * dt);
+    }
+
+    void Update()
+    {
+        if (!blocked)
+        {
+            ReadInput();
+            Move(Time.deltaTime);
+        }
+        Animate(Time.deltaTime);
     }
 }

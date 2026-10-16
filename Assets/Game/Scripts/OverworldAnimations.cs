@@ -146,7 +146,7 @@ public class OverworldAnimations : MonoBehaviour
         coastSheet = LoadPixelArt("Assets/Game/graphics/tilesets/coast.png");
     }
 
-    static Texture2D LoadPixelArt(string path)
+    public static Texture2D LoadPixelArt(string path)
     {
         // Sprite type avoids Unity rescaling non power of two textures (coast.png is 1536x768)
         var importer = (TextureImporter)AssetImporter.GetAtPath(path);
