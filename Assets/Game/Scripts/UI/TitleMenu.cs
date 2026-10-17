@@ -276,22 +276,26 @@ public class TitleMenu : MonoBehaviour
         SaveSystem.CurrentSlot = slot;
         var data = SaveSystem.Load(slot);
 
-        // a brand new save has no position and no monsters yet: that is when the intro plays
+        // a brand new save has no position and no monsters yet: that is when the story plays and the first monster is chosen
         bool brandNew = !data.hasPosition && data.party.Count == 0;
         var intro = brandNew ? FindFirstObjectByType<IntroSequence>() : null;
+        var starter = brandNew ? FindFirstObjectByType<StarterSelect>() : null;
         if (brandNew && intro == null) Debug.LogWarning("There is no Intro Sequence in the scene: add one to the Game object to play the story for new saves.");
+        if (brandNew && starter == null) Debug.LogWarning("There is no Starter Select in the scene: add one to the Game object to choose the first monster. The default party is used instead.");
+
+        // each step hands over to the next one behind a black screen: intro, then the choice of the first monster, then the world
+        Action toWorld = () => StartGame(data);
+        Action toStarter = () =>
+        {
+            if (starter != null) starter.Play(data, toWorld);
+            else toWorld();
+        };
 
         Action begin = () =>
         {
-            if (intro != null)
-            {
-                canvasObject.SetActive(false);
-                intro.Play(() => StartGame(data));
-            }
-            else
-            {
-                StartGame(data);
-            }
+            canvasObject.SetActive(false);
+            if (intro != null) intro.Play(toStarter);
+            else toStarter();
         };
 
         var tint = FindFirstObjectByType<ScreenTint>();

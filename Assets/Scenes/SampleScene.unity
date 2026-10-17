@@ -491,8 +491,11 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 8b36337999d4e4f33bc099199a69e564, type: 3}
   backgrounds:
   - {fileID: 2800000, guid: 4638a4a2ea8474e7798722cea5eaa50e, type: 3}
+  - {fileID: 2800000, guid: 80d620203d5c940988ea5410cc07b233, type: 3}
   - {fileID: 2800000, guid: 021bd12ddadaf4066bab1aa25c7bcf16, type: 3}
+  - {fileID: 2800000, guid: 8ab28bcb69bad46fcb8baea819b77d39, type: 3}
   - {fileID: 2800000, guid: 039338bf5e8b5491e83fa1b1492bc8c1, type: 3}
+  - {fileID: 2800000, guid: 487238328bc0c4a999a7596c41470283, type: 3}
 --- !u!114 &566806024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -528,6 +531,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 79c86d8b562f646ec8259bd8995450e2, type: 3}
   - {fileID: 8300000, guid: 773bdb8205fe0470597db1dbd0c95b99, type: 3}
   - {fileID: 8300000, guid: 72301d3fba1db4807a380046c9caff36, type: 3}
+  - {fileID: 8300000, guid: f2331adcdeb954d83aed08d9e4ac10da, type: 3}
+  - {fileID: 8300000, guid: e0d74f64306b24adc88aedd25abf9848, type: 3}
+  - {fileID: 8300000, guid: fe15e049105894f1c86388b5bcd3aa76, type: 3}
   - {fileID: 8300000, guid: 800dc3973f1f34810a4fbb659df4843a, type: 3}
   - {fileID: 8300000, guid: 1ac09dbb04f1e4cf29204a7c0b8af7b0, type: 3}
   - {fileID: 8300000, guid: e383773a91a3f45f4a172fdc42cf63f6, type: 3}
@@ -640,7 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DayNightCycle
   litMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   unlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
-  dayLengthMinutes: 10
+  dayLengthMinutes: 1
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
