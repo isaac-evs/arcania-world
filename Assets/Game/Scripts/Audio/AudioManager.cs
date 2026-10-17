@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour
     bool musicPaused;          // paused while a jingle plays over it
     bool jingleActive;
     string mapCategory = "overworld";
+    bool isNight;              // the overworld has its own songs for the night
     bool mapMusicWanted;       // the map music should be playing as soon as nothing else is
 
     void Awake()
@@ -68,7 +69,7 @@ public class AudioManager : MonoBehaviour
             }
             else if (mapMusicWanted)
             {
-                StartMusic(mapCategory);
+                StartMusic(MapMusicName());
             }
         }
     }
@@ -124,7 +125,24 @@ public class AudioManager : MonoBehaviour
         string category = CategoryOf(mapName);
         bool changed = category != instance.mapCategory;
         instance.mapCategory = category;
-        if (changed && instance.mapMusicWanted && !instance.jingleActive) instance.StartMusic(category);
+        if (changed && instance.mapMusicWanted && !instance.jingleActive) instance.StartMusic(instance.MapMusicName());
+    }
+
+    // The music of the place the player is in: the overworld songs change to their night versions when it is night
+    string MapMusicName()
+    {
+        return mapCategory == "overworld" && isNight && groups.ContainsKey("overworld_night") ? "overworld_night" : mapCategory;
+    }
+
+    // Day turns into night or night into day. The song that is playing is not cut: it ends, and the next one comes from the other set.
+    public static void SetNight(bool night)
+    {
+        if (instance == null || instance.isNight == night) return;
+        instance.isNight = night;
+
+        bool overworldPlaying = instance.musicName == "overworld" || instance.musicName == "overworld_night";
+        if (instance.mapMusicWanted && !instance.jingleActive && instance.mapCategory == "overworld" && overworldPlaying)
+            instance.musicName = instance.MapMusicName();
     }
 
     // The place of the player has its music: what self.audio['overworld'].play(-1) did in main.py.
@@ -133,7 +151,7 @@ public class AudioManager : MonoBehaviour
     {
         if (instance == null) return;
         instance.mapMusicWanted = true;
-        if (!instance.jingleActive) instance.StartMusic(instance.mapCategory);
+        if (!instance.jingleActive) instance.StartMusic(instance.MapMusicName());
     }
 
     // Everything else goes quiet and this music begins (the title music, the fight music...). The map music stays off until it is asked for again.

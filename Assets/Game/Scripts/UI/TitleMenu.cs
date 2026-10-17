@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -5,9 +7,13 @@ using UnityEngine.UI;
 using UnityEditor;
 #endif
 
-// The title screen: a picture, the game's logo and two choices, Play and Quit. The game waits behind it.
-// One per scene: add it to the Game object. Play fades to black and then MapLoader starts the world.
-// Keyboard only, like the rest of the game: up and down choose, Enter or Space confirms.
+// The title screen: a picture, the game's logo and the menus. The game waits behind it.
+//   Main:    Play, Quit
+//   Saves:   the existing saves (up to three), New Save, Delete, Back
+//   Delete:  pick a save, then confirm
+// Choosing a save fades to black and MapLoader starts the world from it.
+// One per scene: add it to the Game object. Keyboard only, like the rest of the game:
+// up and down choose, Enter or Space confirms, Escape goes back.
 public class TitleMenu : MonoBehaviour
 {
     const float WindowWidth = 1280f, WindowHeight = 720f;
@@ -17,9 +23,15 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] Font regularFont;        // PixeloidSans
 
     // COLORS in settings.py
-    static readonly Color White = UiKit.Hex("#f4fefa"), Purple = UiKit.Hex("#2e1b53");
+    static readonly Color Fill = UiKit.Hex("#fefefc"), Shadow = UiKit.Hex("#b3c9d9"), Purple = UiKit.Hex("#2e1b53");
 
-    static readonly string[] Options = { "Play", "Quit" };
+    enum Screen { Main, Saves, DeleteWhich, ConfirmDelete }
+
+    struct Entry
+    {
+        public string label;
+        public Action action;
+    }
 
     // True while the title screen is up: the rest of the game ignores its keys
     public static bool IsOpen { get; private set; }
@@ -29,6 +41,11 @@ public class TitleMenu : MonoBehaviour
     RectTransform content, items;
     int index;
     bool leaving;
+
+    Screen screen = Screen.Main;
+    readonly List<Entry> entries = new List<Entry>();
+    string header;          // a line shown above the buttons (the delete question)
+    int pendingDelete;      // the save the delete confirmation is about
 
     void Awake()
     {
@@ -57,6 +74,7 @@ public class TitleMenu : MonoBehaviour
         var canvas = canvasObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 800; // over everything of the game, under the screen fade (1000)
+        canvas.pixelPerfect = true; // snap the interface to whole screen pixels, so text and edges stay sharp
 
         var scaler = canvasObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -123,32 +141,95 @@ public class TitleMenu : MonoBehaviour
         return rect;
     }
 
-    // The two buttons, identical in shape, and a pixel arrow next to the selected one
+    // What the current screen offers
+    void BuildEntries()
+    {
+        entries.Clear();
+        header = null;
+
+        switch (screen)
+        {
+            case Screen.Main:
+                Add("Play", () => Go(Screen.Saves));
+                Add("Quit", Quit);
+                break;
+
+            case Screen.Saves:
+                var slots = SaveSystem.ExistingSlots();
+                foreach (int existing in slots)
+                {
+                    int slot = existing;
+                    Add($"Save {slot}", () => StartSave(slot));
+                }
+                if (slots.Count < SaveSystem.MaxSlots) Add("New Save", () => StartSave(SaveSystem.Create()));
+                if (slots.Count > 0) Add("Delete", () => Go(Screen.DeleteWhich));
+                Add("Back", () => Go(Screen.Main));
+                break;
+
+            case Screen.DeleteWhich:
+                foreach (int existing in SaveSystem.ExistingSlots())
+                {
+                    int slot = existing;
+                    Add($"Save {slot}", () => { pendingDelete = slot; Go(Screen.ConfirmDelete); });
+                }
+                Add("Back", () => Go(Screen.Saves));
+                break;
+
+            case Screen.ConfirmDelete:
+                header = $"Delete Save {pendingDelete}?";
+                Add("Yes", () => { SaveSystem.Delete(pendingDelete); Go(Screen.Saves); });
+                Add("No", () => Go(Screen.Saves));
+                break;
+        }
+    }
+
+    void Add(string label, Action action)
+    {
+        entries.Add(new Entry { label = label, action = action });
+    }
+
+    void Go(Screen next)
+    {
+        screen = next;
+        index = 0;
+        Rebuild();
+    }
+
+    // The buttons, identical in shape, and a pixel arrow next to the selected one
     void Rebuild()
     {
+        BuildEntries();
+        index = Mathf.Clamp(index, 0, entries.Count - 1);
         for (int i = items.childCount - 1; i >= 0; i--) Destroy(items.GetChild(i).gameObject);
 
         var font = new UiFont(regularFont, 30, 38);
-        const float width = 360, height = 68, top = 395, gap = 96;
-        for (int i = 0; i < Options.Length; i++)
+        int count = entries.Count;
+
+        // up to three buttons keep the size of the first design; four or five are smaller so they fit under the logo
+        float width = 360, height = count <= 3 ? 68 : 56, gap = count <= 3 ? 96 : 68;
+        float top = count <= 3 ? 395 : 330 - (count - 4) * 30;
+        float x = (WindowWidth - width) / 2f;
+
+        if (header != null) PixelButton(x - 60, 300, width + 120, 56, header, font);
+
+        for (int i = 0; i < count; i++)
         {
-            float x = (WindowWidth - width) / 2f, y = top + i * gap;
-            PixelButton(x, y, width, height, Options[i], font);
+            float y = top + i * gap;
+            PixelButton(x, y, width, height, entries[i].label, font);
             if (i == index) PixelArrow(x - 64, y + height / 2f);
         }
     }
 
-    // White with a purple border and text, and a hard purple block behind it, offset like a shadow
+    // A flat off-white button with purple text and a hard pale-blue block behind it, offset like a pixel shadow
     void PixelButton(float x, float y, float width, float height, string label, UiFont font)
     {
-        const float border = 4, shadow = 8;
-        UiKit.Box(items, x + shadow, y + shadow, width, height, Purple);              // shadow
-        UiKit.Box(items, x, y, width, height, Purple);                                // border
-        UiKit.Box(items, x + border, y + border, width - border * 2, height - border * 2, White);
+        const float shadow = 8;
+        UiKit.Box(items, x + shadow, y + shadow, width, height, Shadow);
+        UiKit.Box(items, x, y, width, height, Fill);
         UiKit.Label(items, label, font, Purple, Anchor.Center, x + width / 2f, y + height / 2f);
     }
 
-    // A right-pointing triangle made of 6 px steps: white with the same purple shadow as the buttons
+    // A right-pointing triangle made of 6 px steps: the same fill and shadow as the buttons
     void PixelArrow(float x, float centerY)
     {
         const float step = 6;
@@ -157,8 +238,8 @@ public class TitleMenu : MonoBehaviour
 
         for (int pass = 0; pass < 2; pass++)
         {
-            float offset = pass == 0 ? 5 : 0; // the shadow first, then the white shape
-            Color color = pass == 0 ? Purple : White;
+            float offset = pass == 0 ? 5 : 0; // the shadow first, then the shape
+            Color color = pass == 0 ? Shadow : Fill;
             for (int row = 0; row < widths.Length; row++)
                 UiKit.Box(items, x + offset, top + row * step + offset, widths[row], step, color);
         }
@@ -169,30 +250,60 @@ public class TitleMenu : MonoBehaviour
         var keyboard = Keyboard.current;
         if (keyboard == null || leaving || !IsOpen) return;
 
-        if (keyboard.downArrowKey.wasPressedThisFrame) { index = (index + 1) % Options.Length; Rebuild(); }
-        if (keyboard.upArrowKey.wasPressedThisFrame) { index = (index - 1 + Options.Length) % Options.Length; Rebuild(); }
+        if (keyboard.downArrowKey.wasPressedThisFrame) { index = (index + 1) % entries.Count; Rebuild(); }
+        if (keyboard.upArrowKey.wasPressedThisFrame) { index = (index - 1 + entries.Count) % entries.Count; Rebuild(); }
 
         if (keyboard.enterKey.wasPressedThisFrame || keyboard.spaceKey.wasPressedThisFrame)
-        {
-            if (index == 0) Play();
-            else Quit();
-        }
+            entries[index].action();
+        else if (keyboard.escapeKey.wasPressedThisFrame)
+            GoBack();
     }
 
-    // The screen fades to black, the menu goes away behind it and the world is built; then the screen fades back in
-    void Play()
+    // Escape: one screen back
+    void GoBack()
     {
-        leaving = true;
-        var tint = FindFirstObjectByType<ScreenTint>();
-        if (tint != null) tint.Begin(StartGame);
-        else StartGame();
+        if (screen == Screen.Saves) Go(Screen.Main);
+        else if (screen == Screen.DeleteWhich || screen == Screen.ConfirmDelete) Go(Screen.Saves);
     }
 
-    void StartGame()
+    // A save was chosen: the screen fades to black, the menu goes away behind it and, for a save that has never been played,
+    // the story plays. Then the world is built from the save.
+    void StartSave(int slot)
+    {
+        if (slot == 0) return;
+
+        leaving = true;
+        SaveSystem.CurrentSlot = slot;
+        var data = SaveSystem.Load(slot);
+
+        // a brand new save has no position and no monsters yet: that is when the intro plays
+        bool brandNew = !data.hasPosition && data.party.Count == 0;
+        var intro = brandNew ? FindFirstObjectByType<IntroSequence>() : null;
+        if (brandNew && intro == null) Debug.LogWarning("There is no Intro Sequence in the scene: add one to the Game object to play the story for new saves.");
+
+        Action begin = () =>
+        {
+            if (intro != null)
+            {
+                canvasObject.SetActive(false);
+                intro.Play(() => StartGame(data));
+            }
+            else
+            {
+                StartGame(data);
+            }
+        };
+
+        var tint = FindFirstObjectByType<ScreenTint>();
+        if (tint != null) tint.Begin(begin);
+        else begin();
+    }
+
+    void StartGame(SaveData data)
     {
         IsOpen = false;
         canvasObject.SetActive(false);
-        mapLoader.StartGame();
+        mapLoader.StartGame(data);
     }
 
     void Quit()

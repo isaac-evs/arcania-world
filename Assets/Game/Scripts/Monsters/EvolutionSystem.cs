@@ -38,6 +38,7 @@ public class EvolutionSystem : MonoBehaviour
         var canvas = canvasObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 600; // over the battle (400) and the monster index (500), under the screen fade (1000)
+        canvas.pixelPerfect = true; // snap the interface to whole screen pixels, so text and edges stay sharp
 
         var scaler = canvasObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;

@@ -284,6 +284,9 @@ GameObject:
   - component: {fileID: 566806023}
   - component: {fileID: 566806024}
   - component: {fileID: 566806025}
+  - component: {fileID: 566806026}
+  - component: {fileID: 566806027}
+  - component: {fileID: 566806028}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -503,16 +506,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   clips:
-  - {fileID: 8300000, guid: 46071ed10cea14ebfada82df4d373b37, type: 3}
-  - {fileID: 8300000, guid: ab51a0af0fd844e99809f9946779d4e2, type: 3}
+  - {fileID: 8300000, guid: 599f1b76427064b72979e535f0d5933d, type: 3}
+  - {fileID: 8300000, guid: 09465822a6e1e4e17bbea54e5d31a6a9, type: 3}
+  - {fileID: 8300000, guid: 20de8f3264d4d4c18872f6c3715fc2d8, type: 3}
+  - {fileID: 8300000, guid: b62de0b91baca415baffe817f5fa1499, type: 3}
   - {fileID: 8300000, guid: ddbba947a47ad4109aa2df0888081477, type: 3}
   - {fileID: 8300000, guid: 42ae39c454d13468ab9cf986c26a84b8, type: 3}
   - {fileID: 8300000, guid: f99d0d2a4cc8245019b1ae9bd8049673, type: 3}
+  - {fileID: 8300000, guid: 2d50d5064923d4cd8985c9ad01974556, type: 3}
+  - {fileID: 8300000, guid: b77ab8e01cae14ea0aa3096538b66655, type: 3}
+  - {fileID: 8300000, guid: d9a5e6a0f1c2c43aea533eafbf828870, type: 3}
+  - {fileID: 8300000, guid: c16cb746c60ba4e40ba2ea981e062e08, type: 3}
   - {fileID: 8300000, guid: 2d194daeb163143b9a55415c2b0cbdc5, type: 3}
+  - {fileID: 8300000, guid: bcae37e23ce484b92b32804cf70c653e, type: 3}
+  - {fileID: 8300000, guid: dee289992b0364b9ea31090e975a0bb7, type: 3}
   - {fileID: 8300000, guid: 4c8d50510a8d0475bb6008b208062371, type: 3}
-  - {fileID: 8300000, guid: b59c8acd1860244b29128897ff35881f, type: 3}
+  - {fileID: 8300000, guid: 59e7a62ef720e4e5eb4dae55aaf26a64, type: 3}
+  - {fileID: 8300000, guid: fef99c83cdacd4e35ae329d60a322a7b, type: 3}
+  - {fileID: 8300000, guid: 78384b20d61234294ae7204db9cfaeeb, type: 3}
+  - {fileID: 8300000, guid: fc8b11f601d1243c1b5a8fbfb6ba9a14, type: 3}
+  - {fileID: 8300000, guid: 79c86d8b562f646ec8259bd8995450e2, type: 3}
+  - {fileID: 8300000, guid: 773bdb8205fe0470597db1dbd0c95b99, type: 3}
+  - {fileID: 8300000, guid: 72301d3fba1db4807a380046c9caff36, type: 3}
   - {fileID: 8300000, guid: 800dc3973f1f34810a4fbb659df4843a, type: 3}
   - {fileID: 8300000, guid: 1ac09dbb04f1e4cf29204a7c0b8af7b0, type: 3}
+  - {fileID: 8300000, guid: e383773a91a3f45f4a172fdc42cf63f6, type: 3}
+  - {fileID: 8300000, guid: 42fa8980afe4e4ddb96774b899efc66b, type: 3}
+  - {fileID: 8300000, guid: 3c05432617bae4abdbd3ebf08c4b3bf0, type: 3}
 --- !u!114 &566806025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,6 +592,55 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 14ca57b9d845d4648bf2eb7bdd3a5acd, type: 3}
   - {fileID: 2800000, guid: 3649c627327844a4790edad7e85c1c37, type: 3}
   - {fileID: 2800000, guid: fd659b6a2847448f2821b9a0a5adfeb8, type: 3}
+--- !u!114 &566806026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566806019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d48e31c26b3dd42659e23f8f72b77004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TitleMenu
+  background: {fileID: 2800000, guid: be92b04ac940a4e83af55a951b23b3bc, type: 3}
+  titleImage: {fileID: 2800000, guid: d87c435b362804baf939387fa1f8b0d3, type: 3}
+  regularFont: {fileID: 12800000, guid: 222574a33cee24c46ad31b8fd78574dc, type: 3}
+--- !u!114 &566806027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566806019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bcaa0a9d45b947b2b356517e9753e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IntroSequence
+  slideImages:
+  - {fileID: 2800000, guid: 2836e4847a91c466aae014f3c4a1647f, type: 3}
+  - {fileID: 2800000, guid: da35a858be09540d295fd167bbe558d5, type: 3}
+  - {fileID: 2800000, guid: d1365a0e9879847d7a4b3eb077d2f799, type: 3}
+  - {fileID: 2800000, guid: 83d07ff48196f4c3f944ae5fcda2f120, type: 3}
+  - {fileID: 2800000, guid: 77aa4028f85cb4e239d425bf54f84dfe, type: 3}
+  regularFont: {fileID: 12800000, guid: 222574a33cee24c46ad31b8fd78574dc, type: 3}
+--- !u!114 &566806028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566806019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be80790521434baaa2227ab33b202ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DayNightCycle
+  litMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  unlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  dayLengthMinutes: 10
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

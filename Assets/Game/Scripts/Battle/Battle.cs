@@ -72,7 +72,7 @@ public partial class Battle
     readonly Countdown opponentDelay;
 
     public Battle(Transform panel, Assets assets, Sprite background, List<Monster> playerMonsters, SortedDictionary<int, Monster> opponentMonsters,
-        Character character, Action<Character> endBattle)
+        Character character, Action<Character> endBattle, bool nightSky = false)
     {
         this.assets = assets;
         playerData = playerMonsters;
@@ -85,7 +85,19 @@ public partial class Battle
         root = Stretched(panel, "Battle");
 
         // display_surface.blit(self.bg_surf, (0, 0))
-        UiKit.Picture(root.transform, background, Anchor.TopLeft, 0, 0);
+        // (the night backgrounds are bigger than 1280 x 720, so the picture is fitted to the screen)
+        var picture = UiKit.Picture(root.transform, background, Anchor.TopLeft, 0, 0);
+        picture.rectTransform.sizeDelta = new Vector2(1280, 720);
+
+        // a night battle has shooting stars in the sky, behind the monsters and everything else
+        if (nightSky)
+        {
+            var host = Stretched(root.transform, "Star Shower");
+            var shower = host.AddComponent<StarShower>();
+            shower.BuildInto(host.transform);
+            shower.HorizonY = 400f;
+            shower.Intensity = 1f;
+        }
 
         layerOutline = Stretched(root.transform, "Outline").transform;
         layerName = Stretched(root.transform, "Name").transform;

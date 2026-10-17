@@ -70,6 +70,7 @@ public class BattleSystem : MonoBehaviour
         var canvas = canvasObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 400; // over the world, under the monster index (500) and the fade (1000)
+        canvas.pixelPerfect = true; // snap the interface to whole screen pixels, so text and edges stay sharp
 
         var scaler = canvasObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -166,7 +167,9 @@ public class BattleSystem : MonoBehaviour
 
     void Begin(SortedDictionary<int, Monster> opponents, string biome, Character trainer)
     {
-        if (!backgroundSprites.TryGetValue(biome, out var background))
+        // a fight in the open at night happens on the night version of the background
+        string backgroundName = DayNightCycle.NightOutdoors && backgroundSprites.ContainsKey(biome + "_night") ? biome + "_night" : biome;
+        if (!backgroundSprites.TryGetValue(backgroundName, out var background))
         {
             Debug.LogError($"No battle background named '{biome}'");
             player.Unblock();
@@ -174,8 +177,8 @@ public class BattleSystem : MonoBehaviour
         }
 
         // the battle is built straight away (like Battle(...) in main.py) but only shown once the screen is black
-        var created = new Battle(panel, assets, background, PlayerParty.Monsters, opponents, trainer, EndBattle);
-        created.root.name = $"Battle ({biome})";
+        var created = new Battle(panel, assets, background, PlayerParty.Monsters, opponents, trainer, EndBattle, nightSky: backgroundName.EndsWith("_night"));
+        created.root.name = $"Battle ({backgroundName})";
         created.root.SetActive(false);
         pending = created;
 
@@ -206,6 +209,7 @@ public class BattleSystem : MonoBehaviour
         if (trainer != null)
         {
             trainer.data.defeated = true;
+            MapLoader.AutoSaveNow();
             if (dialogSystem == null) dialogSystem = FindFirstObjectByType<DialogSystem>();
             dialogSystem.CreateDialog(trainer);
         }
@@ -219,6 +223,7 @@ public class BattleSystem : MonoBehaviour
                 if (evolutionSystem != null) evolutionSystem.CheckEvolution();
                 else AudioManager.StartMapMusic();
             }
+            MapLoader.AutoSaveNow();
         }
     }
 
@@ -232,7 +237,34 @@ public class BattleSystem : MonoBehaviour
         monsterIcons = LoadFolder("Assets/Game/graphics/icons", readable: false);
         uiIcons = LoadFolder("Assets/Game/graphics/ui", readable: true);
         attackSheets = LoadFolder("Assets/Game/graphics/attacks", readable: false);
-        backgrounds = LoadFolder("Assets/Game/graphics/backgrounds", readable: false);
+        backgrounds = LoadBackgrounds("Assets/Game/graphics/backgrounds");
+    }
+
+    // The day backgrounds are pixel art (sharp); the night ones are big pictures that get shrunk to the screen, so they are smoothed
+    static Texture2D[] LoadBackgrounds(string folder)
+    {
+        var textures = new List<Texture2D>();
+        foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { folder }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            textures.Add(System.IO.Path.GetFileNameWithoutExtension(path).EndsWith("_night") ? LoadSmooth(path) : OverworldAnimations.LoadPixelArt(path));
+        }
+        return textures.ToArray();
+    }
+
+    static Texture2D LoadSmooth(string path)
+    {
+        // Sprite type keeps Unity from rescaling the odd 2730-pixel width
+        var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        if (importer != null && (importer.textureType != TextureImporterType.Sprite || importer.filterMode != FilterMode.Bilinear))
+        {
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.filterMode = FilterMode.Bilinear;
+            importer.mipmapEnabled = false;
+            importer.SaveAndReimport();
+        }
+        return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
     }
 
     static Texture2D[] LoadFolder(string folder, bool readable)

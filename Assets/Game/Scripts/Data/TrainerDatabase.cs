@@ -287,4 +287,24 @@ public static class TrainerDatabase
     {
         foreach (var trainer in Trainers.Values) trainer.defeated = false;
     }
+
+    // The character_id of every trainer that has been beaten, for the save file
+    public static List<string> DefeatedIds()
+    {
+        var ids = new List<string>();
+        foreach (var pair in Trainers)
+        {
+            if (pair.Value.defeated) ids.Add(pair.Key);
+        }
+        return ids;
+    }
+
+    public static void ApplyDefeated(List<string> ids)
+    {
+        if (ids == null) return;
+        foreach (var id in ids)
+        {
+            if (Trainers.TryGetValue(id, out var trainer)) trainer.defeated = true;
+        }
+    }
 }

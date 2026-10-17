@@ -110,6 +110,7 @@ public class DialogSystem : MonoBehaviour
             }
             AudioManager.PlayHealUp();
             player.Unblock();
+            MapLoader.AutoSaveNow();
         }
         else if (!finished.data.defeated)
         {
@@ -131,6 +132,7 @@ public class DialogSystem : MonoBehaviour
             if (evolutionSystem == null) evolutionSystem = FindFirstObjectByType<EvolutionSystem>();
             if (evolutionSystem != null) evolutionSystem.CheckEvolution();
             else AudioManager.StartMapMusic();
+            MapLoader.AutoSaveNow();
         }
     }
 
@@ -155,6 +157,8 @@ public class DialogSystem : MonoBehaviour
         background.drawMode = SpriteDrawMode.Sliced;
         background.size = new Vector2(width / PixelsPerUnit, height / PixelsPerUnit);
         background.sortingOrder = WorldSorting.Top + 1; // z = WORLD_LAYERS['top']
+        var unlit = DayNightCycle.UnlitMaterial; // the bubble stays bright at night
+        if (unlit != null) background.sharedMaterial = unlit;
 
         // pixel-for-pixel text: one font pixel is 1/64 unit (TextMesh scales by characterSize * 0.1)
         font.RequestCharactersInTexture(message, FontSize);

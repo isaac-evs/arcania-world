@@ -28,12 +28,21 @@ public class MapLoader : MonoBehaviour
         public string map, position;
     }
 
+    // The one MapLoader of the scene, so other scripts can ask for a save
+    static MapLoader instance;
+
+    string currentMapName, currentEntrance;
     PlayerController player;
     DialogSystem dialogSystem;
     ScreenTint tint;
     GameObject currentMap;
     readonly List<Transition> transitions = new List<Transition>();
     bool transitionStarted;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -69,10 +78,54 @@ public class MapLoader : MonoBehaviour
     }
 
     // Game.__init__ in main.py: the first map, the player at its entrance, and the music
-    public void StartGame()
+    // With a save, the game continues from it; without one it starts like the Python game does
+    public void StartGame(SaveData save = null)
     {
-        LoadMap(startMap, startPosition);
+        if (save != null)
+        {
+            PlayerParty.Load(save.party);
+            TrainerDatabase.ApplyDefeated(save.defeatedTrainers);
+            DayNightCycle.SetHour(save.hour);
+            LoadMap(save.map, save.entrance, save: false);
+
+            // back to the exact spot where the game was saved (a new save starts at the entrance)
+            if (save.hasPosition)
+            {
+                player.transform.position = new Vector3(save.x, save.y, 0);
+                if (Enum.TryParse(save.facing, true, out Direction facing)) player.SetFacing(facing);
+            }
+        }
+        else
+        {
+            LoadMap(startMap, startPosition, save: false);
+        }
+
         AudioManager.StartMapMusic(); // self.audio['overworld'].play(-1)
+        AutoSave(); // a new save holds its starting party from the first moment
+    }
+
+    // The game is saved by itself when the map changes and after fights, healing and evolutions
+    public static void AutoSaveNow()
+    {
+        if (instance != null) instance.AutoSave();
+    }
+
+    void AutoSave()
+    {
+        if (SaveSystem.CurrentSlot == 0 || currentMap == null) return;
+
+        SaveSystem.Write(SaveSystem.CurrentSlot, new SaveData
+        {
+            party = PlayerParty.ToSave(),
+            defeatedTrainers = TrainerDatabase.DefeatedIds(),
+            map = currentMapName,
+            entrance = currentEntrance,
+            hasPosition = true,
+            x = player.transform.position.x,
+            y = player.transform.position.y,
+            facing = player.FacingDirection.ToString().ToLower(),
+            hour = DayNightCycle.Hour,
+        });
     }
 
     void Update()
@@ -96,7 +149,7 @@ public class MapLoader : MonoBehaviour
         }
     }
 
-    void LoadMap(string mapName, string playerPosition)
+    void LoadMap(string mapName, string playerPosition, bool save = true)
     {
         if (currentMap != null)
         {
@@ -113,6 +166,8 @@ public class MapLoader : MonoBehaviour
 
         currentMap = Instantiate(prefab, Vector3.zero, Quaternion.identity);
         currentMap.name = mapName;
+        currentMapName = mapName;
+        currentEntrance = playerPosition;
 
         // terrain, objects, collisions and grass first, then the player, then the characters (they need to know the player)
         currentMap.AddComponent<OverworldObjects>().Build(mapName == "world");
@@ -121,8 +176,13 @@ public class MapLoader : MonoBehaviour
         ReadTransitions();
         currentMap.AddComponent<OverworldCharacters>().Build(characterSheets, shadowTexture, player, dialogSystem);
 
+        // the sprites of the map react to light; the world gets its night-time door lights
+        DayNightCycle.MapBuilt(currentMap, mapName);
+
         // hospitals and gyms have their own music; the world and the house share the overworld songs
         AudioManager.SetMap(mapName);
+
+        if (save) AutoSave(); // the map changed: a good moment to save
     }
 
     // 'Entities': the Player object whose 'pos' matches where we come from

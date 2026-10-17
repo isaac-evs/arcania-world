@@ -13,5 +13,6 @@ public static class GameStateReset
         WorldColliders.ResetState();
         UiKit.ClearCache();
         TitleMenu.ResetState();
+        SaveSystem.ResetState();
     }
 }

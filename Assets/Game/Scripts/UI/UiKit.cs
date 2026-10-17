@@ -84,6 +84,9 @@ public static class UiKit
         float width = Measure(font, content);
         var rect = Place(anchor, ax, ay, width, font.surfaceHeight);
 
+        // pixel fonts: hard letter edges even when the window scales the interface (the default smooths them)
+        font.font.material.mainTexture.filterMode = FilterMode.Point;
+
         text = NewRect(parent, "Text", rect.x, rect.y, width + 2, rect.height).gameObject.AddComponent<Text>();
         text.font = font.font;
         text.fontSize = font.size;
