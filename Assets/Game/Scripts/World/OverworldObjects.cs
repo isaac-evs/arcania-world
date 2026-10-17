@@ -23,6 +23,7 @@ public class OverworldObjects : MonoBehaviour
         this.isWorld = isWorld;
         WorldColliders.Rects.Clear();
         WorldColliders.SightBlockers.Clear();
+        WorldColliders.MonsterPatches.Clear();
         borderRects.Clear();
 
         foreach (var layer in GetComponentsInChildren<SuperObjectLayer>())
@@ -118,6 +119,17 @@ public class OverworldObjects : MonoBehaviour
             var sr = obj.GetComponentInChildren<SpriteRenderer>();
             if (sr == null) continue;
             sr.sortingOrder = WorldSorting.Main(CenterY(obj) - 40f);
+
+            // the patch keeps what a wild fight needs: biome, level and the monsters that can appear
+            var props = obj.GetComponent<SuperCustomProperties>();
+            string Property(string name) => props != null && props.TryGetCustomProperty(name, out var p) ? p.m_Value : "";
+            WorldColliders.MonsterPatches.Add(new WorldColliders.MonsterPatch
+            {
+                rect = MakeRect(obj.m_X, obj.m_Y - obj.m_Height, obj.m_Width, obj.m_Height),
+                biome = Property("biome"),
+                level = int.TryParse(Property("level"), out var level) ? level : 1,
+                monsters = Property("monsters").Split(','),
+            });
         }
     }
 

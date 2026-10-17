@@ -6,6 +6,17 @@ public static class WorldColliders
 {
     public static readonly List<Rect> Rects = new List<Rect>();
 
+    // The tall grass: walking in it can start a wild fight (MonsterPatchSprite in sprites.py)
+    public struct MonsterPatch
+    {
+        public Rect rect;
+        public string biome;
+        public int level;
+        public string[] monsters;
+    }
+
+    public static readonly List<MonsterPatch> MonsterPatches = new List<MonsterPatch>();
+
     // What blocks a character's line of sight: the full image rects of the objects and the original Collisions layer
     // (Character.collision_rects in entities.py), not the shrunken hitboxes and not the extra collisions added in Unity
     public static readonly List<Rect> SightBlockers = new List<Rect>();

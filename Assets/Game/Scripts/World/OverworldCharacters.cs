@@ -79,6 +79,13 @@ public class OverworldCharacters : MonoBehaviour
         character.radius = radiusText == "" ? 0f : float.Parse(radiusText, System.Globalization.CultureInfo.InvariantCulture);
         character.nurse = id == "Nurse";
         character.data = data;
+        if (data.monsters != null)
+        {
+            // {i: Monster(name, lvl) ...}: created together with the character, like in Character.__init__
+            character.monsters = new SortedDictionary<int, Monster>();
+            for (int i = 0; i < data.monsters.Length; i++)
+                character.monsters[i] = new Monster(data.monsters[i].name, data.monsters[i].level);
+        }
         character.player = player;
         character.createDialog = dialogSystem != null ? (Action<Character>)dialogSystem.CreateDialog : null;
         character.earlierCharacters = new List<Character>(spawned); // Python only knows the characters created before this one

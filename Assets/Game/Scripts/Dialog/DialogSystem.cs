@@ -20,6 +20,7 @@ public class DialogSystem : MonoBehaviour
 
     PlayerController player;
     MonsterIndex monsterIndex;
+    BattleSystem battleSystem;
     Character character;               // the character we are talking to, null when there is no dialog
     string[] lines;
     int lineIndex;
@@ -50,7 +51,8 @@ public class DialogSystem : MonoBehaviour
         // Game.input: Space next to a character that you are facing starts a dialog
         // (not while the monster index is open: there Space picks up and drops monsters)
         if (monsterIndex == null) monsterIndex = FindFirstObjectByType<MonsterIndex>();
-        if (!Active && space && (monsterIndex == null || !monsterIndex.IsOpen))
+        if (battleSystem == null) battleSystem = FindFirstObjectByType<BattleSystem>();
+        if (!Active && space && (monsterIndex == null || !monsterIndex.IsOpen) && (battleSystem == null || !battleSystem.Active))
         {
             foreach (var other in FindObjectsByType<Character>(FindObjectsSortMode.None))
             {
@@ -91,14 +93,41 @@ public class DialogSystem : MonoBehaviour
         else EndDialog();
     }
 
+    // end_dialog in main.py
     void EndDialog()
     {
         var finished = character;
         character = null;
 
-        // TODO: the nurse heals the player's monsters, and a trainer that isn't defeated starts a battle
-        // (the player stays blocked until it ends). Until those exist, the player is simply released.
-        player.Unblock();
+        if (finished.nurse)
+        {
+            // the nurse heals all the player's monsters
+            foreach (var monster in PlayerParty.Monsters)
+            {
+                monster.health = monster.GetStat("max_health");
+                monster.energy = monster.GetStat("max_energy");
+            }
+            player.Unblock();
+        }
+        else if (!finished.data.defeated)
+        {
+            // a trainer that is not defeated yet starts a fight; the player stays blocked until it is over
+            if (battleSystem == null) battleSystem = FindFirstObjectByType<BattleSystem>();
+            if (battleSystem != null)
+            {
+                battleSystem.StartTrainerBattle(finished);
+            }
+            else
+            {
+                Debug.LogWarning("No Battle System in the scene: add one to the Game object to fight trainers");
+                player.Unblock();
+            }
+        }
+        else
+        {
+            player.Unblock();
+            // TODO: check_evolution()
+        }
     }
 
     // DialogSprite: white rounded box with black text, midbottom 10 px above the character's head

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public enum Corners { None = 0, TopLeft = 1, TopRight = 2, BottomLeft = 4, BottomRight = 8, Left = TopLeft | BottomLeft, Right = TopRight | BottomRight, All = 15 }
 
 // Which point of a pygame rect a position refers to (get_frect(midleft = ...) and friends)
-public enum Anchor { TopLeft, MidLeft, BottomLeft, MidTop, Center, BottomRight }
+public enum Anchor { TopLeft, TopRight, MidLeft, BottomLeft, MidTop, MidBottom, Center, BottomRight }
 
 public struct UiFont
 {
@@ -93,13 +93,32 @@ public static class UiKit
         return width;
     }
 
-    public static Image Picture(Transform parent, Sprite sprite, Anchor anchor, float ax, float ay)
+    public static Image Picture(Transform parent, Sprite sprite, Anchor anchor, float ax, float ay, bool flipX = false)
     {
         var rect = Place(anchor, ax, ay, sprite.rect.width, sprite.rect.height);
-        var image = NewRect(parent, "Picture", rect.x, rect.y, rect.width, rect.height).gameObject.AddComponent<Image>();
+        var transform = NewRect(parent, "Picture", rect.x, rect.y, rect.width, rect.height);
+        var image = transform.gameObject.AddComponent<Image>();
         image.sprite = sprite;
         image.raycastTarget = false;
+
+        if (flipX)
+        {
+            // pygame.transform.flip(frame, True, False): mirror around the picture's own centre
+            transform.pivot = new Vector2(0.5f, 0.5f);
+            transform.anchoredPosition = new Vector2(Mathf.Floor(rect.x) + transform.sizeDelta.x / 2f, -Mathf.Floor(rect.y) - transform.sizeDelta.y / 2f);
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
         return image;
+    }
+
+    // The frames of one row of a sprite sheet (the monster sheets are 4 x 2: idle, then attack)
+    public static Sprite[] CutRow(Texture2D sheet, int columns, int rows, int row)
+    {
+        float cellWidth = sheet.width / (float)columns, cellHeight = sheet.height / (float)rows;
+        var frames = new Sprite[columns];
+        for (int col = 0; col < columns; col++)
+            frames[col] = SpriteFrom(sheet, new Rect(col * cellWidth, sheet.height - (row + 1) * cellHeight, cellWidth, cellHeight));
+        return frames;
     }
 
     // Sprite from a texture (or a part of it) with the pixels untouched
@@ -112,6 +131,8 @@ public static class UiKit
     {
         switch (anchor)
         {
+            case Anchor.TopRight:    return new Rect(ax - width, ay, width, height);
+            case Anchor.MidBottom:   return new Rect(ax - width / 2f, ay - height, width, height);
             case Anchor.MidLeft:     return new Rect(ax, ay - height / 2f, width, height);
             case Anchor.BottomLeft:  return new Rect(ax, ay - height, width, height);
             case Anchor.MidTop:      return new Rect(ax - width / 2f, ay, width, height);

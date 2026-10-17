@@ -37,6 +37,7 @@ public class MonsterIndex : MonoBehaviour
 
     PlayerController player;
     DialogSystem dialogSystem;
+    BattleSystem battleSystem;
     GameObject canvasObject;
     RectTransform content;       // rebuilt whenever something changes
     Image monsterImage;          // the animated monster, updated every frame
@@ -148,8 +149,9 @@ public class MonsterIndex : MonoBehaviour
         var keyboard = Keyboard.current;
         if (keyboard == null) return;
 
-        // Game.input: Return opens and closes the index (not during a dialog)
-        if (keyboard.enterKey.wasPressedThisFrame && (dialogSystem == null || !dialogSystem.Active))
+        // Game.input: Return opens and closes the index (not during a dialog or a battle)
+        if (battleSystem == null) battleSystem = FindFirstObjectByType<BattleSystem>();
+        if (keyboard.enterKey.wasPressedThisFrame && (dialogSystem == null || !dialogSystem.Active) && (battleSystem == null || !battleSystem.Active))
         {
             open = !open;
             player.blocked = !player.blocked; // exactly like main.py: it flips the flag, it does not stop the walk animation
