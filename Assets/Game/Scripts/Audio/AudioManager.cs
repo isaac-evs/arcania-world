@@ -27,6 +27,17 @@ public class AudioManager : MonoBehaviour
     bool isNight;              // the overworld has its own songs for the night
     bool mapMusicWanted;       // the map music should be playing as soon as nothing else is
 
+    // the victory music is not played to the end: a few seconds, then it fades out while the game takes over
+    const float VictoryPlayTime = 3f, VictoryFadeTime = 1.2f, MusicFadeInTime = 1.5f;
+    bool victoryPlaying;
+    float victoryTime;
+    bool fadeInNextMusic;      // the next song starts silent and rises
+
+    // when day turns into night (or the reverse) the song that is playing fades out and a song of the other set fades in
+    const float SwitchFadeTime = 2.5f;
+    bool switching;
+    float switchTime;
+
     void Awake()
     {
         instance = this;
@@ -55,6 +66,44 @@ public class AudioManager : MonoBehaviour
 
     void Update()
     {
+        float dt = Time.unscaledDeltaTime;
+
+        // victory music: it plays for 3 seconds and then fades out; once it has gone the code below starts the map music
+        if (jingleActive && victoryPlaying)
+        {
+            victoryTime += dt;
+            if (victoryTime > VictoryPlayTime)
+            {
+                float t = (victoryTime - VictoryPlayTime) / VictoryFadeTime;
+                jingle.volume = Mathf.Clamp01(1f - t);
+                if (t >= 1f) jingle.Stop();
+            }
+        }
+
+        // day turns into night: the song fades out, then a song of the other set rises
+        if (switching)
+        {
+            switchTime += dt;
+            music.volume = Mathf.Clamp01(1f - switchTime / SwitchFadeTime);
+            if (switchTime >= SwitchFadeTime)
+            {
+                switching = false;
+                if (mapMusicWanted && !jingleActive && mapCategory == "overworld")
+                {
+                    StopMusicNow();
+                    fadeInNextMusic = true;
+                    StartMusic(MapMusicName());
+                }
+                else
+                {
+                    music.volume = 1f;
+                }
+            }
+        }
+
+        // the map music rises smoothly after the victory music or a change of the time of day
+        if (!switching && music.isPlaying && music.volume < 1f) music.volume = Mathf.MoveTowards(music.volume, 1f, dt / MusicFadeInTime);
+
         // a group plays one song after the other, never the same one twice in a row
         if (musicName != null && !musicPaused && !music.isPlaying && groups[musicName].Count > 1) PlayNextSong();
 
@@ -62,6 +111,13 @@ public class AudioManager : MonoBehaviour
         if (jingleActive && !jingle.isPlaying)
         {
             jingleActive = false;
+            if (victoryPlaying)
+            {
+                victoryPlaying = false;
+                jingle.volume = 1f;
+                fadeInNextMusic = true; // the map music comes in softly after the victory music
+            }
+
             if (musicPaused)
             {
                 music.UnPause();
@@ -134,7 +190,8 @@ public class AudioManager : MonoBehaviour
         return mapCategory == "overworld" && isNight && groups.ContainsKey("overworld_night") ? "overworld_night" : mapCategory;
     }
 
-    // Day turns into night or night into day. The song that is playing is not cut: it ends, and the next one comes from the other set.
+    // Day turns into night or night into day. The overworld song that is playing fades out and a song of the other set fades in,
+    // so a night song cannot play on into the morning (the songs are minutes long and a whole day lasts ten minutes).
     public static void SetNight(bool night)
     {
         if (instance == null || instance.isNight == night) return;
@@ -142,7 +199,10 @@ public class AudioManager : MonoBehaviour
 
         bool overworldPlaying = instance.musicName == "overworld" || instance.musicName == "overworld_night";
         if (instance.mapMusicWanted && !instance.jingleActive && instance.mapCategory == "overworld" && overworldPlaying)
-            instance.musicName = instance.MapMusicName();
+        {
+            instance.switching = true;
+            instance.switchTime = 0f;
+        }
     }
 
     // The place of the player has its music: what self.audio['overworld'].play(-1) did in main.py.
@@ -181,6 +241,8 @@ public class AudioManager : MonoBehaviour
     {
         if (instance == null || !instance.byName.TryGetValue(name, out var clip)) return;
         instance.StopMusicNow();
+        instance.victoryPlaying = true;
+        instance.victoryTime = 0f;
         instance.PlayJingle(clip);
     }
 
@@ -203,6 +265,7 @@ public class AudioManager : MonoBehaviour
 
     void PlayJingle(AudioClip clip)
     {
+        jingle.volume = 1f;
         jingle.clip = clip;
         jingle.loop = false;
         jingle.Play();
@@ -212,7 +275,9 @@ public class AudioManager : MonoBehaviour
     void StopJingleNow()
     {
         jingle.Stop();
+        jingle.volume = 1f;
         jingleActive = false;
+        victoryPlaying = false;
         if (musicPaused)
         {
             music.UnPause();
@@ -222,6 +287,7 @@ public class AudioManager : MonoBehaviour
 
     void StopMusicNow()
     {
+        switching = false;
         music.Stop();
         musicName = null;
         musicPaused = false;
@@ -248,6 +314,9 @@ public class AudioManager : MonoBehaviour
 
         lastClip = clip;
         music.clip = clip;
+        switching = false;
+        music.volume = fadeInNextMusic ? 0f : 1f;
+        fadeInNextMusic = false;
         music.loop = group.Count == 1; // a single song repeats, a group moves on to another song when one ends
         music.Play();
         musicPaused = false;

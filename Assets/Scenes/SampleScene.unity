@@ -287,6 +287,8 @@ GameObject:
   - component: {fileID: 566806026}
   - component: {fileID: 566806027}
   - component: {fileID: 566806028}
+  - component: {fileID: 566806029}
+  - component: {fileID: 566806030}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -647,6 +649,35 @@ MonoBehaviour:
   litMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   unlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   dayLengthMinutes: 1
+--- !u!114 &566806029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566806019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52bfd8667bbe943069eca821f7dad75a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StarterSelect
+  background: {fileID: 2800000, guid: 85e6996827398447fb778207ede9df06, type: 3}
+  regularFont: {fileID: 12800000, guid: 222574a33cee24c46ad31b8fd78574dc, type: 3}
+--- !u!114 &566806030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566806019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ebd9cdb364d4ee685daf4db755aa1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Multiplayer
+  remoteSheet: {fileID: 2800000, guid: 68046e9c0ad6b47d28bd2ec156d9547c, type: 3}
+  shadowTexture: {fileID: 2800000, guid: 35b09317374bb44cd81692a6d1d9637b, type: 3}
+  regularFont: {fileID: 12800000, guid: 222574a33cee24c46ad31b8fd78574dc, type: 3}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,7 +823,7 @@ MonoBehaviour:
   direction: {x: 0, y: 0}
   blocked: 0
   noticed: 0
-  noticeTexture: {fileID: 0}
+  noticeTexture: {fileID: 2800000, guid: 955ea5043cdbc4b29a0b7d23e6ed67f8, type: 3}
 --- !u!212 &1136101536
 SpriteRenderer:
   serializedVersion: 3

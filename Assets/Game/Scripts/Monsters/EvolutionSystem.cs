@@ -73,7 +73,7 @@ public class EvolutionSystem : MonoBehaviour
         for (int i = 0; i < party.Count; i++)
         {
             var monster = party[i];
-            if (!monster.CanEvolve || monster.level != monster.EvolveLevel) continue;
+            if (!monster.CanEvolve || monster.level < monster.EvolveLevel) continue; // (reached, not exactly: levels can come in twos now)
 
             AudioManager.StopJingle(); // the victory music gives way to the evolution
             AudioManager.Play("evolution");

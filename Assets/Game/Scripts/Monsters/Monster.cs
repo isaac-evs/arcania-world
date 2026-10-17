@@ -96,16 +96,19 @@ public class Monster
 
     public float GetBaseDamage(string attack) => GetStat("attack") * MonsterDatabase.Attacks[attack].amount;
 
+    // The Python game gave level * 100 xp per defeated monster, and a level needs level * 150: slow for a short game.
+    // Every xp award is multiplied by this.
+    public const float XpGainMultiplier = 4f;
+
     public void UpdateXp(float amount)
     {
-        if (levelUp - xp > amount)
+        // as in the Python game, a full bar means a new level and what is left over starts the next bar; the difference is
+        // that it keeps going, so a big award can give several levels at once (before, it gave one at most)
+        xp += amount;
+        while (xp >= levelUp)
         {
-            xp += amount;
-        }
-        else
-        {
+            xp -= levelUp;
             level += 1;
-            xp = amount - (levelUp - xp);
             levelUp = level * 150;
         }
     }
@@ -116,16 +119,21 @@ public class Monster
         energy = Mathf.Max(0, Mathf.Min(energy, GetStat("max_energy")));
     }
 
-    // Not in the Python game, where energy never came back: it recovers slowly during a fight, faster with a higher recovery stat.
-    // (recovery * level energy points per second, times this)
-    const float EnergyRegen = 0.3f;
+    // How fast the turn bar fills: speed * (level + this). The Python game used speed * level, which made a fight of a low-level
+    // monster painfully slow (a level 5 fight took about 40 seconds); this keeps the monster's own speed mattering but makes the
+    // level count much less, so every fight takes about the same time.
+    const float TurnSpeedBase = 30f;
+
+    // Not in the Python game, where energy never came back: it recovers during a fight, faster with a higher recovery stat.
+    // (recovery * level energy points per second, times this; tuned together with the faster turns)
+    const float EnergyRegen = 0.9f;
 
     public void Update(float dt)
     {
         StatLimiter();
         if (paused) return;
 
-        initiative += GetStat("speed") * dt;
+        initiative += baseStats.speed * (TurnSpeedBase + level) * dt;
         energy += GetStat("recovery") * EnergyRegen * dt;
     }
 }

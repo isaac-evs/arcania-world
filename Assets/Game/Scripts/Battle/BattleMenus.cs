@@ -9,10 +9,11 @@ public partial class Battle
     // BATTLE_CHOICES['full'] in settings.py
     static readonly (string option, Vector2 pos, string icon)[] Choices =
     {
-        ("fight", new Vector2(30, -60), "sword"),
-        ("defend", new Vector2(40, -20), "shield"),
-        ("switch", new Vector2(40, 20), "arrows"),
-        ("catch", new Vector2(30, 60), "hand"),
+        ("fight", new Vector2(28, -80), "sword"),
+        ("defend", new Vector2(40, -40), "shield"),
+        ("switch", new Vector2(46, 0), "arrows"),
+        ("catch", new Vector2(40, 40), "hand"),
+        ("escape", new Vector2(28, 80), "arrows"), // not in the Python game: it reuses the swap icon, so the selected choice is named
     };
 
     static readonly Color MenuWhite = UiKit.Hex("#f4fefa"), DarkWhite = UiKit.Hex("#f0f0f0"), Light = UiKit.Hex("#c8c8c8"),
@@ -44,6 +45,16 @@ public partial class Battle
         if (selectionMode == Mode.General) DrawGeneral();
         if (selectionMode == Mode.Attacks) DrawAttacks();
         if (selectionMode == Mode.Switch) DrawSwitch();
+        if (selectionMode != Mode.General) DrawHint();
+    }
+
+    // Choosing a target has no menu: a line at the bottom says how to go back
+    void DrawHint()
+    {
+        const string text = "Space: choose     Escape: back";
+        float width = UiKit.Measure(assets.small, text) + 20;
+        UiKit.Box(layerMenu, (1280f - width) / 2f, 676, width, 30, Color.white, 4);
+        UiKit.Label(layerMenu, text, assets.small, Color.black, Anchor.Center, 1280f / 2f, 676 + 15);
     }
 
     string MenuSignature()
@@ -67,7 +78,17 @@ public partial class Battle
         {
             var choice = Choices[i];
             Sprite icon = i == indexes[(int)Mode.General] ? assets.ui[choice.icon + "_highlight"] : assets.Gray(assets.ui[choice.icon]);
-            UiKit.Picture(layerMenu, icon, Anchor.Center, currentMonster.rect.xMax + choice.pos.x, currentMonster.rect.center.y + choice.pos.y);
+            float x = currentMonster.rect.xMax + choice.pos.x, y = currentMonster.rect.center.y + choice.pos.y;
+            UiKit.Picture(layerMenu, icon, Anchor.Center, x, y);
+
+            // the name of the selected choice, in a small white box beside its icon (Switch and Escape have the same icon)
+            if (i == indexes[(int)Mode.General])
+            {
+                string label = char.ToUpper(choice.option[0]) + choice.option.Substring(1);
+                float width = UiKit.Measure(assets.small, label) + 16;
+                UiKit.Box(layerMenu, x + 26, y - 14, width, 28, Color.white, 4);
+                UiKit.Label(layerMenu, label, assets.small, Color.black, Anchor.MidLeft, x + 26 + 8, y);
+            }
         }
     }
 

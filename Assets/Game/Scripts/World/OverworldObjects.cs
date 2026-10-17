@@ -112,13 +112,18 @@ public class OverworldObjects : MonoBehaviour
 
     void SetupGrass(SuperObjectLayer layer)
     {
-        // MonsterPatchSprite: not solid, y_sort lowered by 40. Python draws 'sand' biome patches flat on the ground ('bg'),
-        // but all 44 of them sit on grass terrain (a quirk of the map data), so they are y-sorted like the rest and overlap the player.
+        // MonsterPatchSprite: not solid. A patch drawn with the sand picture (tile 244 of Grass.tsx) lies flat on the ground, below the
+        // player, like Python's 'sand' patches ('bg'). The ones drawn with grass pictures are tall: they are y-sorted with y_sort
+        // lowered by 40, so they cover the player's feet. (In the map data some patches have the 'sand' biome but a grass picture,
+        // so the picture decides, not the biome.)
+        const uint SandTile = 244;
         foreach (var obj in layer.GetComponentsInChildren<SuperObject>())
         {
             var sr = obj.GetComponentInChildren<SpriteRenderer>();
             if (sr == null) continue;
-            sr.sortingOrder = WorldSorting.Main(CenterY(obj) - 40f);
+
+            bool flat = (obj.m_TileId & 0x1FFFFFFFu) == SandTile;
+            sr.sortingOrder = flat ? WorldSorting.Bg : WorldSorting.Main(CenterY(obj) - 40f);
 
             // the patch keeps what a wild fight needs: biome, level and the monsters that can appear
             var props = obj.GetComponent<SuperCustomProperties>();

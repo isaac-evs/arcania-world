@@ -50,7 +50,7 @@ public partial class Battle
     public readonly Transform layerOutline, layerName, layerMonster, layerEffects, layerOverlay, layerMenu, layerMessage;
 
     // general
-    readonly Action<Character> endBattle;
+    readonly Action<Character, bool> endBattle; // the trainer (null in a wild fight), and whether the player won (false: ran away)
     bool battleOver;
 
     // monster_data
@@ -72,11 +72,11 @@ public partial class Battle
     readonly Countdown opponentDelay;
 
     public Battle(Transform panel, Assets assets, Sprite background, List<Monster> playerMonsters, SortedDictionary<int, Monster> opponentMonsters,
-        Character character, Action<Character> endBattle, bool nightSky = false)
+        Character character, Action<Character, bool> endBattle, bool nightSky = false)
     {
         this.assets = assets;
         playerData = playerMonsters;
-        opponentData = opponentMonsters;
+        opponentData = new SortedDictionary<int, Monster>(opponentMonsters);
         this.character = character;
         this.endBattle = endBattle;
 
@@ -120,6 +120,8 @@ public partial class Battle
         return rect.gameObject;
     }
 
+    bool hadOpponents; // false only if something went wrong and the opponent never had a monster: that is not a win
+
     // setup
     void Setup()
     {
@@ -135,6 +137,9 @@ public partial class Battle
         // remove opponent monster data: the ones on the field are no longer waiting
         for (int i = 0; i < opponentSprites.Count; i++)
             opponentData.Remove(i);
+
+        hadOpponents = opponentSprites.Count > 0;
+        if (!hadOpponents) Debug.LogError("A battle started with no opponent monsters.");
     }
 
     public void CreateMonster(Monster monster, int index, int posIndex, string entity)
@@ -157,6 +162,27 @@ public partial class Battle
         return all;
     }
 
+    // Safety net: if the monsters are paused but nobody is taking a turn, the fight is frozen. After a second they are resumed.
+    float stuckTime;
+
+    void UnfreezeIfStuck(float dt)
+    {
+        bool anyPaused = AllSprites().Exists(sprite => sprite.monster.paused);
+        if (anyPaused && !TurnInProgress())
+        {
+            stuckTime += dt;
+            if (stuckTime > 1f)
+            {
+                UpdateAllMonsters(false);
+                stuckTime = 0f;
+            }
+        }
+        else
+        {
+            stuckTime = 0f;
+        }
+    }
+
     // update
     public void Update(float dt)
     {
@@ -170,6 +196,7 @@ public partial class Battle
         UpdateMessage(dt);
         UpdateAttackSprites(dt);
         CheckActive();
+        UnfreezeIfStuck(dt);
 
         // drawing
         UpdateOutlines();
@@ -180,7 +207,7 @@ public partial class Battle
     void HandleInput()
     {
         var keyboard = Keyboard.current;
-        if (keyboard == null || selectionMode == Mode.None || currentMonster == null) return;
+        if (keyboard == null || Multiplayer.IsMenuOpen || selectionMode == Mode.None || currentMonster == null) return;
 
         int limiter = 0;
         switch (selectionMode)
@@ -201,6 +228,9 @@ public partial class Battle
 
         if (keyboard.spaceKey.wasPressedThisFrame)
         {
+            // set when this press already sent us back to the four choices: it must not also choose one of them
+            bool backedOut = false;
+
             if (selectionMode == Mode.Switch)
             {
                 var available = AvailableMonsters();
@@ -231,6 +261,8 @@ public partial class Battle
                         // a trainer's monsters belong to the trainer: they cannot be caught (the menu stays open, like a failed catch)
                         ShowMessage(StolenMessages[UnityEngine.Random.Range(0, StolenMessages.Length)]);
                         ShowCross(target);
+                        BackToMenu();
+                        backedOut = true;
                     }
                     else
                     {
@@ -250,6 +282,9 @@ public partial class Battle
                         else
                         {
                             ShowCross(target);
+                            ShowMessage("It is too healthy to catch!");
+                            BackToMenu();
+                            backedOut = true;
                         }
                     }
                 }
@@ -261,15 +296,20 @@ public partial class Battle
                 if (abilities.Count > 0)
                 {
                     selectionMode = Mode.Target;
-                    selectedAttack = abilities[Mathf.Min(indexes[(int)Mode.Attacks], abilities.Count - 1)];
+                    attackListIndex = Mathf.Min(indexes[(int)Mode.Attacks], abilities.Count - 1);
+                    selectedAttack = abilities[attackListIndex];
                     selectionSide = MonsterDatabase.Attacks[selectedAttack].target;
                 }
             }
 
-            if (selectionMode == Mode.General)
+            if (selectionMode == Mode.General && !backedOut)
             {
                 int choice = indexes[(int)Mode.General];
-                if (choice == 0) selectionMode = Mode.Attacks;
+                if (choice == 0)
+                {
+                    if (currentMonster.monster.GetAbilities(all: false).Count == 0) ShowMessage("Not enough energy!");
+                    else selectionMode = Mode.Attacks;
+                }
 
                 if (choice == 1) // defend
                 {
@@ -280,13 +320,19 @@ public partial class Battle
                     indexes[(int)Mode.General] = 0;
                 }
 
-                if (choice == 2) selectionMode = Mode.Switch;
+                if (choice == 2)
+                {
+                    if (AvailableMonsters().Count == 0) ShowMessage("No other monsters to switch to!");
+                    else selectionMode = Mode.Switch;
+                }
 
                 if (choice == 3) // catch
                 {
                     selectionMode = Mode.Target;
                     selectionSide = "opponent";
                 }
+
+                if (choice == 4) TryEscape();
             }
 
             for (int i = 0; i < indexes.Length; i++) indexes[i] = 0;
@@ -295,7 +341,28 @@ public partial class Battle
         if (keyboard.escapeKey.wasPressedThisFrame)
         {
             if (selectionMode == Mode.Attacks || selectionMode == Mode.Switch || selectionMode == Mode.Target)
-                selectionMode = Mode.General;
+                BackToMenu();
+        }
+    }
+
+    int attackListIndex; // where the cursor was in the attack list, to put it back when going back to it
+
+    // Escape goes back one step: from choosing a target for an attack, to the attack list; from anything else, to the four choices.
+    // The turn is not spent. The attack that was being aimed is forgotten: in the Python game it was kept, so choosing Catch
+    // afterwards fired that attack instead.
+    void BackToMenu()
+    {
+        bool fromAttackTarget = selectionMode == Mode.Target && selectedAttack != null;
+        selectedAttack = null;
+
+        if (fromAttackTarget)
+        {
+            selectionMode = Mode.Attacks;
+            indexes[(int)Mode.Attacks] = attackListIndex;
+        }
+        else
+        {
+            selectionMode = Mode.General;
         }
     }
 
@@ -331,9 +398,16 @@ public partial class Battle
     // battle system
     void CheckActive()
     {
+        // one turn at a time: while a menu is open, an opponent is about to attack or an attack is playing, the next monster waits
+        if (TurnInProgress()) return;
+
         foreach (var sprite in AllSprites())
         {
             if (sprite.monster.initiative < 100) continue;
+
+            // A monster that has fainted or is about to leave the field never gets a turn. (In the Python game it could: its
+            // attack then never finished, nobody was resumed, and the fight froze.)
+            if (sprite.removed || sprite.Dying || sprite.monster.health <= 0) continue;
 
             sprite.monster.defending = false;
             UpdateAllMonsters(true);
@@ -342,7 +416,13 @@ public partial class Battle
             currentMonster = sprite;
             if (sprite.IsPlayer) selectionMode = Mode.General;
             else opponentDelay.Activate();
+            break; // if another monster is ready too, it goes next
         }
+    }
+
+    bool TurnInProgress()
+    {
+        return selectionMode != Mode.None || opponentDelay.active || AllSprites().Exists(sprite => sprite.IsAttacking);
     }
 
     void UpdateAllMonsters(bool pause)
@@ -413,7 +493,7 @@ public partial class Battle
                 }
 
                 // xp
-                float xpAmount = sprite.monster.level * 100f / playerSprites.Count;
+                float xpAmount = sprite.monster.level * 100f * Monster.XpGainMultiplier / playerSprites.Count;
                 foreach (var playerSprite in playerSprites) playerSprite.monster.UpdateXp(xpAmount);
             }
 
@@ -421,16 +501,46 @@ public partial class Battle
         }
     }
 
+    // Not in the Python game: running away works 40% of the time. When it fails the turn is lost, and the turn bar, which
+    // was emptied when this turn began, starts filling again from zero.
+    const float EscapeChance = 0.4f;
+
+    void TryEscape()
+    {
+        if (UnityEngine.Random.value < EscapeChance)
+        {
+            ShowMessage("Got away safely!");
+            battleOver = true;
+            foreach (var monster in playerData) monster.initiative = 0;
+            endBattle(character, false);
+            return;
+        }
+
+        ShowMessage("Couldn't get away!");
+        currentMonster = null;
+        selectionMode = Mode.None;
+        UpdateAllMonsters(false);
+    }
+
     // OpponentAttack: the opponent picks a random ability and a random target
     void OpponentAttack()
     {
-        if (currentMonster == null) return;
-        var abilities = currentMonster.monster.GetAbilities();
-        if (abilities.Count == 0) return;
+        // if the monster cannot attack after all, its turn is simply over: everybody must be resumed or the fight freezes
+        if (currentMonster == null || currentMonster.removed || currentMonster.Dying)
+        {
+            UpdateAllMonsters(false);
+            return;
+        }
 
-        string ability = abilities[UnityEngine.Random.Range(0, abilities.Count)];
-        var targets = MonsterDatabase.Attacks[ability].target == "player" ? opponentSprites : playerSprites;
-        if (targets.Count == 0) return;
+        var abilities = currentMonster.monster.GetAbilities();
+        string ability = abilities.Count > 0 ? abilities[UnityEngine.Random.Range(0, abilities.Count)] : null;
+        var targets = ability != null && MonsterDatabase.Attacks[ability].target == "player" ? opponentSprites : playerSprites;
+        if (ability == null || targets.Count == 0)
+        {
+            UpdateAllMonsters(false);
+            return;
+        }
+
         currentMonster.ActivateAttack(targets[UnityEngine.Random.Range(0, targets.Count)], ability);
     }
 
@@ -440,7 +550,7 @@ public partial class Battle
         if (opponentSprites.Count == 0 && !battleOver)
         {
             battleOver = true;
-            endBattle(character);
+            endBattle(character, hadOpponents); // with nobody to fight it is not a victory: nothing is won and nobody is defeated
             foreach (var monster in playerData) monster.initiative = 0;
         }
 

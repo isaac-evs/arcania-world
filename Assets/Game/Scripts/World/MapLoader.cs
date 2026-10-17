@@ -32,6 +32,9 @@ public class MapLoader : MonoBehaviour
     static MapLoader instance;
 
     string currentMapName, currentEntrance;
+
+    // The map the player is in now ("world", "house"...): the other player is only shown when they are in the same one
+    public string CurrentMapName => currentMapName;
     PlayerController player;
     DialogSystem dialogSystem;
     ScreenTint tint;
@@ -170,19 +173,33 @@ public class MapLoader : MonoBehaviour
         currentEntrance = playerPosition;
 
         // terrain, objects, collisions and grass first, then the player, then the characters (they need to know the player)
-        currentMap.AddComponent<OverworldObjects>().Build(mapName == "world");
-        currentMap.AddComponent<OverworldAnimations>().Build(waterFrames, coastSheet);
-        PlacePlayer(playerPosition);
-        ReadTransitions();
-        currentMap.AddComponent<OverworldCharacters>().Build(characterSheets, shadowTexture, player, dialogSystem);
+        // Each step is on its own: if one of them fails (the error goes to the log), the others still run, and above all the player
+        // is still put in the map and released. Before, one failure left the player frozen, with every other key still working.
+        Step("objects and collisions", () => currentMap.AddComponent<OverworldObjects>().Build(mapName == "world"));
+        Step("water and coast", () => currentMap.AddComponent<OverworldAnimations>().Build(waterFrames, coastSheet));
+        Step("the player", () => PlacePlayer(playerPosition));
+        Step("transitions", ReadTransitions);
+        Step("characters", () => currentMap.AddComponent<OverworldCharacters>().Build(characterSheets, shadowTexture, player, dialogSystem));
 
         // the sprites of the map react to light; the world gets its night-time door lights
-        DayNightCycle.MapBuilt(currentMap, mapName);
+        Step("light", () => DayNightCycle.MapBuilt(currentMap, mapName));
 
         // hospitals and gyms have their own music; the world and the house share the overworld songs
         AudioManager.SetMap(mapName);
 
         if (save) AutoSave(); // the map changed: a good moment to save
+    }
+
+    static void Step(string what, Action step)
+    {
+        try
+        {
+            step();
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError($"Building the map failed at {what}: {exception}");
+        }
     }
 
     // 'Entities': the Player object whose 'pos' matches where we come from

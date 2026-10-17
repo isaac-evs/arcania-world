@@ -161,7 +161,15 @@ public class BattleSystem : MonoBehaviour
     public void StartTrainerBattle(Character trainer)
     {
         AudioManager.PlayBattleMusic(trainer.IsGymBoss ? "battle_gym_boss" : "battle_trainer");
-        Begin(trainer.monsters, trainer.data.biome, trainer);
+
+        // The team is made again for every fight. The battle takes the monsters out of the list as they go onto the field, so
+        // reusing the trainer's own list left it empty after a first fight (when you ran away and came back, there was nobody
+        // to fight and the fight counted as won), and hurt monsters would have stayed hurt.
+        var team = new SortedDictionary<int, Monster>();
+        for (int i = 0; i < trainer.data.monsters.Length; i++)
+            team[i] = new Monster(trainer.data.monsters[i].name, trainer.data.monsters[i].level);
+
+        Begin(team, trainer.data.biome, trainer);
     }
 
     void Begin(SortedDictionary<int, Monster> opponents, string biome, Character trainer)
@@ -191,11 +199,9 @@ public class BattleSystem : MonoBehaviour
         });
     }
 
-    // end_battle: back to the map; a defeated trainer talks to you again
-    void EndBattle(Character trainer)
+    // end_battle: back to the map; a defeated trainer talks to you again. won = false means the player ran away.
+    void EndBattle(Character trainer, bool won)
     {
-        // the fight music stops and the victory music of this kind of fight plays
-        AudioManager.PlayVictory(trainer == null ? "wild_defeated" : trainer.IsGymBoss ? "gym_boss_defeated" : "trainer_defeated");
         if (tint == null) tint = FindFirstObjectByType<ScreenTint>();
         var finished = battle;
         tint.Begin(() =>
@@ -204,6 +210,18 @@ public class BattleSystem : MonoBehaviour
             battle = null;
             canvasObject.SetActive(false);
         });
+
+        if (!won)
+        {
+            // ran away: no victory music, no experience, nobody is defeated. The map music comes back.
+            player.Unblock();
+            AudioManager.StartMapMusic();
+            MapLoader.AutoSaveNow();
+            return;
+        }
+
+        // the fight music stops and the victory music of this kind of fight plays
+        AudioManager.PlayVictory(trainer == null ? "wild_defeated" : trainer.IsGymBoss ? "gym_boss_defeated" : "trainer_defeated");
 
         if (trainer != null)
         {

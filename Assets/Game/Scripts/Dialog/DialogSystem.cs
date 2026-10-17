@@ -46,7 +46,7 @@ public class DialogSystem : MonoBehaviour
     void Update()
     {
         var keyboard = Keyboard.current;
-        if (keyboard == null) return;
+        if (keyboard == null || Multiplayer.IsMenuOpen) return; // the multiplayer menu owns the keys
         bool space = keyboard.spaceKey.wasPressedThisFrame;
 
         // Game.input: Space next to a character that you are facing starts a dialog

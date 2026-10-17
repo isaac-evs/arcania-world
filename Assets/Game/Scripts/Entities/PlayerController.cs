@@ -16,10 +16,16 @@ public class PlayerController : Entity
     {
         base.Awake();
 
-#if UNITY_EDITOR
-        if (noticeTexture == null) noticeTexture = OverworldAnimations.LoadPixelArt("Assets/Game/graphics/ui/notice.png");
-#endif
-        // groups.py draws notice.png with its midbottom at the player's midtop while player.noticed
+        // groups.py draws notice.png with its midbottom at the player's midtop while player.noticed.
+        // Without the picture the icon is skipped: the player must work either way. (Before, a missing picture stopped Awake halfway
+        // in an exported game, because the editor-only code that used to load it by name does not exist there, and the half-made
+        // player then failed on every frame, so it never moved.)
+        if (noticeTexture == null)
+        {
+            Debug.LogWarning("The Player Controller has no Notice Texture: right-click its header and choose Reset. The '!' will not show.");
+            return;
+        }
+
         var go = new GameObject("Notice");
         go.transform.SetParent(transform, false);
         go.transform.localPosition = new Vector3(0, 1f, 0); // the sprite is 128 px tall, so its top is 1 unit above the centre
@@ -40,6 +46,20 @@ public class PlayerController : Entity
     }
 
 #if UNITY_EDITOR
+    // The picture has to be stored in the scene, because an exported game cannot look files up by name. If it is missing it is filled
+    // in as soon as the editor looks at this component (a moment later: importing is not allowed in the middle of OnValidate).
+    void OnValidate()
+    {
+        if (noticeTexture != null) return;
+
+        UnityEditor.EditorApplication.delayCall += () =>
+        {
+            if (this == null || noticeTexture != null) return;
+            noticeTexture = OverworldAnimations.LoadPixelArt("Assets/Game/graphics/ui/notice.png");
+            UnityEditor.EditorUtility.SetDirty(this);
+        };
+    }
+
     protected override void Reset()
     {
         base.Reset();
@@ -53,10 +73,11 @@ public class PlayerController : Entity
         if (kb == null) return;
 
         Vector2 input = Vector2.zero;
-        if (kb.upArrowKey.isPressed)    input.y += 1;
-        if (kb.downArrowKey.isPressed)  input.y -= 1;
-        if (kb.leftArrowKey.isPressed)  input.x -= 1;
-        if (kb.rightArrowKey.isPressed) input.x += 1;
+        // the arrow keys, as in the Python game, and W A S D as well
+        if (kb.upArrowKey.isPressed || kb.wKey.isPressed)    input.y += 1;
+        if (kb.downArrowKey.isPressed || kb.sKey.isPressed)  input.y -= 1;
+        if (kb.leftArrowKey.isPressed || kb.aKey.isPressed)  input.x -= 1;
+        if (kb.rightArrowKey.isPressed || kb.dKey.isPressed) input.x += 1;
 
         direction = input.normalized;
     }
@@ -102,7 +123,7 @@ public class PlayerController : Entity
 
     void Update()
     {
-        noticeRenderer.enabled = noticed;
+        if (noticeRenderer != null) noticeRenderer.enabled = noticed;
         UpdateYSort();
         if (!blocked)
         {

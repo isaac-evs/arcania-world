@@ -30,6 +30,9 @@ public class BattleMonster
     // True while it is waiting to leave the field (it fainted or was caught)
     public bool Dying => kill.active;
 
+    // True while its attack animation plays (the damage is applied when it ends)
+    public bool IsAttacking => state == "attack";
+
     // data
     string state = "idle";
     float frameIndex;
