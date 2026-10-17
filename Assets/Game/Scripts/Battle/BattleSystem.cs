@@ -151,9 +151,8 @@ public class BattleSystem : MonoBehaviour
         player.Block();
         AudioManager.PlayBattleMusic("battle_wild");
 
-        var opponents = new SortedDictionary<int, Monster>();
-        for (int i = 0; i < patch.monsters.Length; i++)
-            opponents[i] = new Monster(patch.monsters[i], patch.level + Random.Range(-3, 4));
+        // the monsters are not the ones written on the patch (always the same two): they are rolled from the biome's own pool
+        var opponents = WildEncounters.Roll(patch.biome, patch.level);
 
         Begin(opponents, patch.biome, null);
     }

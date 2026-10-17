@@ -116,9 +116,16 @@ public class Monster
         energy = Mathf.Max(0, Mathf.Min(energy, GetStat("max_energy")));
     }
 
+    // Not in the Python game, where energy never came back: it recovers slowly during a fight, faster with a higher recovery stat.
+    // (recovery * level energy points per second, times this)
+    const float EnergyRegen = 0.3f;
+
     public void Update(float dt)
     {
         StatLimiter();
-        if (!paused) initiative += GetStat("speed") * dt;
+        if (paused) return;
+
+        initiative += GetStat("speed") * dt;
+        energy += GetStat("recovery") * EnergyRegen * dt;
     }
 }

@@ -47,7 +47,7 @@ public partial class Battle
     public readonly Character character;   // the trainer, null in a wild fight
 
     // BATTLE_LAYERS: outline, name, monster, effects, overlay (drawn in this order), then the menus on top
-    public readonly Transform layerOutline, layerName, layerMonster, layerEffects, layerOverlay, layerMenu;
+    public readonly Transform layerOutline, layerName, layerMonster, layerEffects, layerOverlay, layerMenu, layerMessage;
 
     // general
     readonly Action<Character> endBattle;
@@ -105,6 +105,7 @@ public partial class Battle
         layerEffects = Stretched(root.transform, "Effects").transform;
         layerOverlay = Stretched(root.transform, "Overlay").transform;
         layerMenu = Stretched(root.transform, "Menu").transform;
+        layerMessage = Stretched(root.transform, "Message").transform;
 
         Setup();
     }
@@ -166,6 +167,7 @@ public partial class Battle
         opponentDelay.Update(dt);
         foreach (var sprite in AllSprites()) sprite.Update(dt); // battle_sprites.update(dt)
         UpdateCrosses(dt);
+        UpdateMessage(dt);
         UpdateAttackSprites(dt);
         CheckActive();
 
@@ -224,14 +226,26 @@ public partial class Battle
                         currentMonster = null;
                         selectionMode = Mode.None;
                     }
+                    else if (character != null)
+                    {
+                        // a trainer's monsters belong to the trainer: they cannot be caught (the menu stays open, like a failed catch)
+                        ShowMessage(StolenMessages[UnityEngine.Random.Range(0, StolenMessages.Length)]);
+                        ShowCross(target);
+                    }
                     else
                     {
-                        // catching: only monsters below 90% health can be caught
-                        if (target.monster.health < target.monster.GetStat("max_health") * 0.9f)
+                        // catching: only monsters below 90% health can be caught (and not one that is already leaving the field)
+                        if (!target.Dying && target.monster.health > 0 && target.monster.health < target.monster.GetStat("max_health") * 0.9f)
                         {
-                            playerData.Add(target.monster);
+                            // the same monster can only join the party once
+                            if (!playerData.Contains(target.monster)) playerData.Add(target.monster);
                             target.DelayedKill(null);
                             UpdateAllMonsters(false);
+
+                            // The catch is the action of this turn. (In the Python game the menu stayed open on the target, so pressing
+                            // Space again caught the same monster again and put it twice in the party.)
+                            currentMonster = null;
+                            selectionMode = Mode.None;
                         }
                         else
                         {

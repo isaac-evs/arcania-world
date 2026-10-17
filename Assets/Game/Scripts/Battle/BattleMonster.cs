@@ -27,6 +27,9 @@ public class BattleMonster
     public Rect rect;
     public bool removed;
 
+    // True while it is waiting to leave the field (it fainted or was caught)
+    public bool Dying => kill.active;
+
     // data
     string state = "idle";
     float frameIndex;

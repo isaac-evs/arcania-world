@@ -183,4 +183,47 @@ public partial class Battle
             if (!crosses[i].timer.active) crosses.RemoveAt(i);
         }
     }
+
+    // What is said when you try to catch a monster that belongs to another trainer
+    static readonly string[] StolenMessages =
+    {
+        "Hey! What are you doing?",
+        "It's not yours!",
+        "Don't be a thief!",
+    };
+
+    const float MessageTime = 2f;
+    GameObject message;
+    Countdown messageTimer;
+
+    // A bubble in the style of the dialogue boxes (white, rounded, black text) at the top of the screen for a couple of seconds
+    void ShowMessage(string text)
+    {
+        if (message != null) Object.Destroy(message);
+
+        var font = new UiFont(assets.regular.font, 30, 38); // the dialogue font and size
+        float width = UiKit.Measure(font, text) + 28;
+        int before = layerMessage.childCount;
+        UiKit.Box(layerMessage, (1280f - width) / 2f, 36, width, font.surfaceHeight + 28, Color.white, 4);
+        UiKit.Label(layerMessage, text, font, Color.black, Anchor.MidTop, 1280f / 2f, 36 + 14);
+
+        // both pieces are removed together
+        var holder = new GameObject("Message", typeof(RectTransform));
+        var holderRect = (RectTransform)holder.transform;
+        holderRect.SetParent(layerMessage, false);
+        holderRect.anchorMin = Vector2.zero;
+        holderRect.anchorMax = Vector2.one;
+        holderRect.offsetMin = holderRect.offsetMax = Vector2.zero;
+        while (layerMessage.childCount > before + 1)
+            layerMessage.GetChild(before).SetParent(holderRect, false);
+
+        message = holder;
+        messageTimer = new Countdown(MessageTime, () => { if (message != null) Object.Destroy(message); message = null; });
+        messageTimer.Activate();
+    }
+
+    void UpdateMessage(float dt)
+    {
+        messageTimer?.Update(dt);
+    }
 }
