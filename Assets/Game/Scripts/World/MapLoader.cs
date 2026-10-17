@@ -63,6 +63,14 @@ public class MapLoader : MonoBehaviour
             camera.backgroundColor = Color.black;
         }
 
+        // with a title menu in the scene the game waits for Play; without one it starts straight away
+        if (FindFirstObjectByType<TitleMenu>() != null) player.Block();
+        else StartGame();
+    }
+
+    // Game.__init__ in main.py: the first map, the player at its entrance, and the music
+    public void StartGame()
+    {
         LoadMap(startMap, startPosition);
         AudioManager.StartMapMusic(); // self.audio['overworld'].play(-1)
     }

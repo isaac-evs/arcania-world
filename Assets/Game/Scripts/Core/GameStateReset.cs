@@ -12,5 +12,6 @@ public static class GameStateReset
         TrainerDatabase.ResetState();
         WorldColliders.ResetState();
         UiKit.ClearCache();
+        TitleMenu.ResetState();
     }
 }

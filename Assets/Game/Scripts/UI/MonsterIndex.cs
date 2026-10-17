@@ -151,6 +151,7 @@ public class MonsterIndex : MonoBehaviour
 
         // Game.input: Return opens and closes the index (not during a dialog or a battle)
         if (battleSystem == null) battleSystem = FindFirstObjectByType<BattleSystem>();
+        if (TitleMenu.IsOpen) return; // the title screen owns the keys
         if (keyboard.enterKey.wasPressedThisFrame && (dialogSystem == null || !dialogSystem.Active) && (battleSystem == null || !battleSystem.Active))
         {
             open = !open;

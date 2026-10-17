@@ -136,14 +136,20 @@ public class AudioManager : MonoBehaviour
         if (!instance.jingleActive) instance.StartMusic(instance.mapCategory);
     }
 
-    // A fight starts: everything else goes quiet and the fight music begins. name: battle_wild, battle_trainer or battle_gym_boss
-    public static void PlayBattleMusic(string name)
+    // Everything else goes quiet and this music begins (the title music, the fight music...). The map music stays off until it is asked for again.
+    public static void PlayMusic(string name)
     {
         if (instance == null) return;
         instance.mapMusicWanted = false;
         instance.StopJingleNow();
         instance.StopMusicNow();
         instance.StartMusic(name);
+    }
+
+    // A fight starts. name: battle_wild, battle_trainer or battle_gym_boss
+    public static void PlayBattleMusic(string name)
+    {
+        PlayMusic(name);
     }
 
     // A trainer has seen the player and walks up
