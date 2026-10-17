@@ -54,21 +54,31 @@ public static class UiKit
     }
 
     // draw_bar in support.py: a background rectangle with a progress rectangle on top
-    public static void Bar(Transform parent, float x, float y, float width, float height, float value, float maxValue, Color color, Color background, int radius = 1)
+    public static Image Bar(Transform parent, float x, float y, float width, float height, float value, float maxValue, Color color, Color background, int radius = 1)
+    {
+        Box(parent, x, y, width, height, background, radius);
+        return Box(parent, x, y, BarProgress(width, value, maxValue), height, color, radius);
+    }
+
+    // The width of the filled part of a bar
+    public static float BarProgress(float width, float value, float maxValue)
     {
         float ratio = width / maxValue;
-        float progress = Mathf.Max(0, Mathf.Min(width, value * ratio));
-        Box(parent, x, y, width, height, background, radius);
-        Box(parent, x, y, progress, height, color, radius);
+        return Mathf.Max(0, Mathf.Min(width, value * ratio));
     }
 
     // A text surface placed like pygame's get_frect(anchor = (ax, ay)); returns the rect it occupies
     public static Rect Label(Transform parent, string content, UiFont font, Color color, Anchor anchor, float ax, float ay)
     {
+        return Label(parent, content, font, color, anchor, ax, ay, out _);
+    }
+
+    public static Rect Label(Transform parent, string content, UiFont font, Color color, Anchor anchor, float ax, float ay, out Text text)
+    {
         float width = Measure(font, content);
         var rect = Place(anchor, ax, ay, width, font.surfaceHeight);
 
-        var text = NewRect(parent, "Text", rect.x, rect.y, width + 2, rect.height).gameObject.AddComponent<Text>();
+        text = NewRect(parent, "Text", rect.x, rect.y, width + 2, rect.height).gameObject.AddComponent<Text>();
         text.font = font.font;
         text.fontSize = font.size;
         text.color = color;

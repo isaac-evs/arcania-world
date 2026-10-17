@@ -1,71 +1,98 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// Port of the setup part of Battle in battle.py (and the battle sprites in sprites.py).
-// For now it only places the monsters and their name, level and stats boxes; there are no actions yet.
-// Everything is drawn with pygame coordinates in the 1280x720 panel (see UiKit).
-public class Battle
+// Port of Battle in battle.py: the field, the turn system (initiative), the menus' input, deaths and the end of the fight.
+// The attack itself (animation, sound, element and defense maths) is the next step: see ApplyAttack.
+// Everything is drawn with pygame coordinates in the 1280x720 panel (see UiKit); the menus are in BattleMenus.cs.
+public partial class Battle
 {
     // BATTLE_POSITIONS in settings.py, in the order of list(...values()): top, center, bottom
-    static readonly Vector2[] LeftPositions = { new Vector2(360, 260), new Vector2(190, 400), new Vector2(410, 520) };
-    static readonly Vector2[] RightPositions = { new Vector2(900, 260), new Vector2(1110, 390), new Vector2(900, 550) };
+    public static readonly Vector2[] LeftPositions = { new Vector2(360, 260), new Vector2(190, 400), new Vector2(410, 520) };
+    public static readonly Vector2[] RightPositions = { new Vector2(900, 260), new Vector2(1110, 390), new Vector2(900, 550) };
 
-    const float AnimationSpeed = 6f; // ANIMATION_SPEED in settings.py
+    public enum Mode { None, General, Attacks, Switch, Target }
 
-    static readonly Color White = UiKit.Hex("#f4fefa"), Gray = UiKit.Hex("#3a373b"), Red = UiKit.Hex("#f03131"),
-        Blue = UiKit.Hex("#66d7ee"), Black = Color.black;
-
-    // MonsterSprite
-    public class MonsterSprite
-    {
-        public Monster monster;
-        public int index, posIndex;
-        public string entity;
-        public Rect rect;
-        public Image image;
-        public Sprite[] frames;
-        public float frameIndex;
-    }
-
-    // everything the screen needs from the game: the pictures, the fonts and the monster names to frames
+    // everything the screen needs from the game: the pictures and the fonts
     public class Assets
     {
-        public Sprite background;
-        public Dictionary<string, Sprite[]> idleFrames;
         public UiFont regular, small;
+        public Dictionary<string, Texture2D> sheets;   // monster sheets by monster name
+        public Dictionary<string, Sprite> ui;          // graphics/ui by name
+        public Dictionary<string, Sprite> icons;       // graphics/icons by monster name
+
+        readonly Dictionary<string, MonsterFrames> frames = new Dictionary<string, MonsterFrames>();
+        readonly Dictionary<Sprite, Sprite> grayscale = new Dictionary<Sprite, Sprite>();
+
+        // cut (and derived) the first time a monster is needed
+        public MonsterFrames GetFrames(string monsterName)
+        {
+            if (!frames.TryGetValue(monsterName, out var result))
+                frames[monsterName] = result = MonsterFrames.Build(sheets[monsterName]);
+            return result;
+        }
+
+        public Sprite Gray(Sprite sprite)
+        {
+            if (!grayscale.TryGetValue(sprite, out var result))
+                grayscale[sprite] = result = MonsterFrames.Grayscale(sprite);
+            return result;
+        }
     }
 
     public readonly GameObject root;
+    public readonly Assets assets;
     public readonly Character character;   // the trainer, null in a wild fight
-    public readonly List<MonsterSprite> playerSprites = new List<MonsterSprite>();
-    public readonly List<MonsterSprite> opponentSprites = new List<MonsterSprite>();
 
-    // monster_data: what is left to send into the fight
-    readonly List<Monster> playerData;
-    readonly SortedDictionary<int, Monster> opponentData;
-    readonly Assets assets;
+    // BATTLE_LAYERS: outline, name, monster, effects, overlay (drawn in this order), then the menus on top
+    public readonly Transform layerOutline, layerName, layerMonster, layerEffects, layerOverlay, layerMenu;
 
-    // BATTLE_LAYERS: outline, name, monster, effects, overlay (drawn in this order)
-    readonly Transform layerOutline, layerName, layerMonster, layerEffects, layerOverlay;
+    // general
+    readonly Action<Character> endBattle;
+    bool battleOver;
 
-    public Battle(Transform panel, Assets assets, List<Monster> playerMonsters, SortedDictionary<int, Monster> opponentMonsters, Character character)
+    // monster_data
+    readonly List<Monster> playerData;                    // the player's whole party
+    readonly SortedDictionary<int, Monster> opponentData; // the opponent's monsters that are still waiting
+
+    // groups
+    public readonly List<BattleMonster> playerSprites = new List<BattleMonster>();
+    public readonly List<BattleMonster> opponentSprites = new List<BattleMonster>();
+
+    // control
+    BattleMonster currentMonster;
+    Mode selectionMode = Mode.None;
+    string selectedAttack;
+    string selectionSide = "player";
+    readonly int[] indexes = new int[5];  // indexed by Mode (general, attacks, switch, target)
+
+    // timers
+    readonly Countdown opponentDelay;
+
+    public Battle(Transform panel, Assets assets, Sprite background, List<Monster> playerMonsters, SortedDictionary<int, Monster> opponentMonsters,
+        Character character, Action<Character> endBattle)
     {
         this.assets = assets;
         playerData = playerMonsters;
         opponentData = opponentMonsters;
         this.character = character;
+        this.endBattle = endBattle;
+
+        opponentDelay = new Countdown(0.6f, OpponentAttack);
 
         root = Stretched(panel, "Battle");
 
         // display_surface.blit(self.bg_surf, (0, 0))
-        UiKit.Picture(root.transform, assets.background, Anchor.TopLeft, 0, 0);
+        UiKit.Picture(root.transform, background, Anchor.TopLeft, 0, 0);
 
         layerOutline = Stretched(root.transform, "Outline").transform;
         layerName = Stretched(root.transform, "Name").transform;
         layerMonster = Stretched(root.transform, "Monster").transform;
         layerEffects = Stretched(root.transform, "Effects").transform;
         layerOverlay = Stretched(root.transform, "Overlay").transform;
+        layerMenu = Stretched(root.transform, "Menu").transform;
 
         Setup();
     }
@@ -97,100 +124,302 @@ public class Battle
             opponentData.Remove(i);
     }
 
-    void CreateMonster(Monster monster, int index, int posIndex, string entity)
+    public void CreateMonster(Monster monster, int index, int posIndex, string entity)
     {
         monster.paused = false;
-        bool player = entity == "player";
+        var sprite = new BattleMonster(this, monster, index, posIndex, entity);
+        (entity == "player" ? playerSprites : opponentSprites).Add(sprite);
+    }
 
-        var sprite = new MonsterSprite
+    public void RemoveSprite(BattleMonster sprite)
+    {
+        playerSprites.Remove(sprite);
+        opponentSprites.Remove(sprite);
+    }
+
+    List<BattleMonster> AllSprites()
+    {
+        var all = new List<BattleMonster>(playerSprites);
+        all.AddRange(opponentSprites);
+        return all;
+    }
+
+    // update
+    public void Update(float dt)
+    {
+        CheckEndBattle();
+
+        // updates
+        HandleInput();
+        opponentDelay.Update(dt);
+        foreach (var sprite in AllSprites()) sprite.Update(dt); // battle_sprites.update(dt)
+        UpdateCrosses(dt);
+        CheckActive();
+
+        // drawing
+        UpdateOutlines();
+        UpdateMenu();
+    }
+
+    // input
+    void HandleInput()
+    {
+        var keyboard = Keyboard.current;
+        if (keyboard == null || selectionMode == Mode.None || currentMonster == null) return;
+
+        int limiter = 0;
+        switch (selectionMode)
         {
-            monster = monster, index = index, posIndex = posIndex, entity = entity,
-            frames = assets.idleFrames[monster.name],
-        };
+            case Mode.General: limiter = Choices.Length; break;
+            case Mode.Attacks: limiter = currentMonster.monster.GetAbilities(all: false).Count; break;
+            case Mode.Switch: limiter = AvailableMonsters().Count; break;
+            case Mode.Target: limiter = selectionSide == "opponent" ? opponentSprites.Count : playerSprites.Count; break;
+        }
 
-        // the player's monsters face right: their frames are mirrored
-        Vector2 pos = player ? LeftPositions[posIndex] : RightPositions[posIndex];
-        sprite.image = UiKit.Picture(layerMonster, sprite.frames[0], Anchor.Center, pos.x, pos.y, flipX: player);
-        sprite.rect = UiKit.Place(Anchor.Center, pos.x, pos.y, sprite.frames[0].rect.width, sprite.frames[0].rect.height);
-        (player ? playerSprites : opponentSprites).Add(sprite);
-
-        // ui
-        Vector2 namePos = player ? new Vector2(sprite.rect.xMin + 16, sprite.rect.center.y - 70)
-                                 : new Vector2(sprite.rect.xMax - 40, sprite.rect.center.y - 70);
-        var nameRect = NameSprite(namePos, sprite);
-        Vector2 levelPos = player ? new Vector2(nameRect.xMin, nameRect.yMax) : new Vector2(nameRect.xMax, nameRect.yMax);
-        LevelSprite(player, levelPos, sprite);
-        StatsSprite(new Vector2(sprite.rect.center.x, sprite.rect.yMax + 20), sprite);
-    }
-
-    // MonsterNameSprite: white box with the name, midtop at pos
-    Rect NameSprite(Vector2 pos, MonsterSprite sprite)
-    {
-        const int padding = 10;
-        float width = UiKit.Measure(assets.regular, sprite.monster.name) + padding * 2;
-        float height = assets.regular.surfaceHeight + padding * 2;
-        var rect = UiKit.Place(Anchor.MidTop, pos.x, pos.y, width, height);
-
-        UiKit.Box(layerName, rect.x, rect.y, rect.width, rect.height, White);
-        UiKit.Label(layerName, sprite.monster.name, assets.regular, Black, Anchor.TopLeft, rect.x + padding, rect.y + padding);
-        return rect;
-    }
-
-    // MonsterLevelSprite: 60 x 26 box with "Lvl n" and the xp line along the bottom
-    void LevelSprite(bool player, Vector2 pos, MonsterSprite sprite)
-    {
-        var rect = UiKit.Place(player ? Anchor.TopLeft : Anchor.TopRight, pos.x, pos.y, 60, 26);
-
-        UiKit.Box(layerName, rect.x, rect.y, rect.width, rect.height, White);
-        UiKit.Label(layerName, $"Lvl {sprite.monster.level}", assets.small, Black, Anchor.Center, rect.x + rect.width / 2f, rect.y + rect.height / 2f);
-        UiKit.Bar(layerName, rect.x, rect.y + rect.height - 2, rect.width, 2, sprite.monster.xp, sprite.monster.levelUp, Black, White, 0);
-    }
-
-    // MonsterStatsSprite: 150 x 48 box with health, energy and the initiative line, midbottom at pos
-    void StatsSprite(Vector2 pos, MonsterSprite sprite)
-    {
-        var rect = UiKit.Place(Anchor.MidBottom, pos.x, pos.y, 150, 48);
-        UiKit.Box(layerOverlay, rect.x, rect.y, rect.width, rect.height, White);
-
-        var info = sprite.monster.GetInfo();
-        Color[] colors = { Red, Blue, Gray };
-        for (int i = 0; i < info.Length; i++)
+        // (the Python game divides by zero here when there is nothing to choose from)
+        if (limiter > 0)
         {
-            var (value, maxValue) = info[i];
-            if (i < 2) // health and energy
+            int mode = (int)selectionMode;
+            if (keyboard.downArrowKey.wasPressedThisFrame) indexes[mode] = (indexes[mode] + 1) % limiter;
+            if (keyboard.upArrowKey.wasPressedThisFrame) indexes[mode] = ((indexes[mode] - 1) % limiter + limiter) % limiter;
+        }
+
+        if (keyboard.spaceKey.wasPressedThisFrame)
+        {
+            if (selectionMode == Mode.Switch)
             {
-                var textRect = UiKit.Label(layerOverlay, $"{(int)value}/{Python(maxValue)}", assets.small, Black, Anchor.TopLeft,
-                    rect.x + rect.width * 0.05f, rect.y + i * rect.height / 2f);
-                UiKit.Bar(layerOverlay, textRect.xMin, textRect.yMax - 2, rect.width * 0.9f, 4, value, maxValue, colors[i], Black, 2);
+                var available = AvailableMonsters();
+                if (available.Count > 0)
+                {
+                    var (index, newMonster) = available[Mathf.Min(indexes[(int)Mode.Switch], available.Count - 1)];
+                    currentMonster.Remove();
+                    CreateMonster(newMonster, index, currentMonster.posIndex, "player");
+                    selectionMode = Mode.None;
+                    UpdateAllMonsters(false);
+                }
             }
-            else // initiative
+
+            if (selectionMode == Mode.Target)
             {
-                UiKit.Bar(layerOverlay, rect.x, rect.y + rect.height - 2, rect.width, 2, value, maxValue, colors[i], White, 0);
+                var target = TargetSprite(selectionSide);
+                if (target != null)
+                {
+                    if (selectedAttack != null)
+                    {
+                        currentMonster.ActivateAttack(target, selectedAttack);
+                        selectedAttack = null;
+                        currentMonster = null;
+                        selectionMode = Mode.None;
+                    }
+                    else
+                    {
+                        // catching: only monsters below 90% health can be caught
+                        if (target.monster.health < target.monster.GetStat("max_health") * 0.9f)
+                        {
+                            playerData.Add(target.monster);
+                            target.DelayedKill(null);
+                            UpdateAllMonsters(false);
+                        }
+                        else
+                        {
+                            ShowCross(target);
+                        }
+                    }
+                }
             }
+
+            if (selectionMode == Mode.Attacks)
+            {
+                var abilities = currentMonster.monster.GetAbilities(all: false);
+                if (abilities.Count > 0)
+                {
+                    selectionMode = Mode.Target;
+                    selectedAttack = abilities[Mathf.Min(indexes[(int)Mode.Attacks], abilities.Count - 1)];
+                    selectionSide = MonsterDatabase.Attacks[selectedAttack].target;
+                }
+            }
+
+            if (selectionMode == Mode.General)
+            {
+                int choice = indexes[(int)Mode.General];
+                if (choice == 0) selectionMode = Mode.Attacks;
+
+                if (choice == 1) // defend
+                {
+                    currentMonster.monster.defending = true;
+                    UpdateAllMonsters(false);
+                    currentMonster = null;
+                    selectionMode = Mode.None;
+                    indexes[(int)Mode.General] = 0;
+                }
+
+                if (choice == 2) selectionMode = Mode.Switch;
+
+                if (choice == 3) // catch
+                {
+                    selectionMode = Mode.Target;
+                    selectionSide = "opponent";
+                }
+            }
+
+            for (int i = 0; i < indexes.Length; i++) indexes[i] = 0;
+        }
+
+        if (keyboard.escapeKey.wasPressedThisFrame)
+        {
+            if (selectionMode == Mode.Attacks || selectionMode == Mode.Switch || selectionMode == Mode.Target)
+                selectionMode = Mode.General;
         }
     }
 
-    // f'{max_value}' prints whole numbers without decimals
-    static string Python(float value)
+    // {sprite.pos_index: sprite for sprite in group}, then the one the target index points at
+    BattleMonster TargetSprite(string side)
     {
-        return value == Mathf.Floor(value) ? ((int)value).ToString() : value.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+        var group = side == "opponent" ? opponentSprites : playerSprites;
+        var byPosition = new List<BattleMonster>();
+        var positions = new List<int>();
+        foreach (var sprite in group)
+        {
+            int at = positions.IndexOf(sprite.posIndex);
+            if (at >= 0) { byPosition[at] = sprite; }
+            else { positions.Add(sprite.posIndex); byPosition.Add(sprite); }
+        }
+        if (byPosition.Count == 0) return null;
+        return byPosition[Mathf.Min(indexes[(int)Mode.Target], byPosition.Count - 1)];
     }
 
-    // MonsterSprite.animate
-    public void Update(float dt)
+    // The party members that are not on the field and still have health
+    List<(int index, Monster monster)> AvailableMonsters()
     {
-        foreach (var sprite in playerSprites) Animate(sprite, dt);
-        foreach (var sprite in opponentSprites) Animate(sprite, dt);
+        var available = new List<(int, Monster)>();
+        for (int i = 0; i < playerData.Count; i++)
+        {
+            var monster = playerData[i];
+            bool active = playerSprites.Exists(sprite => sprite.index == i && sprite.monster == monster);
+            if (!active && monster.health > 0) available.Add((i, monster));
+        }
+        return available;
     }
 
-    static void Animate(MonsterSprite sprite, float dt)
+    // battle system
+    void CheckActive()
     {
-        sprite.frameIndex += AnimationSpeed * dt;
-        sprite.image.sprite = sprite.frames[(int)(sprite.frameIndex % sprite.frames.Length)];
+        foreach (var sprite in AllSprites())
+        {
+            if (sprite.monster.initiative < 100) continue;
+
+            sprite.monster.defending = false;
+            UpdateAllMonsters(true);
+            sprite.monster.initiative = 0;
+            sprite.SetHighlight(true);
+            currentMonster = sprite;
+            if (sprite.IsPlayer) selectionMode = Mode.General;
+            else opponentDelay.Activate();
+        }
+    }
+
+    void UpdateAllMonsters(bool pause)
+    {
+        foreach (var sprite in AllSprites()) sprite.monster.paused = pause;
+    }
+
+    // apply_attack: called when a monster's attack animation ends.
+    // TODO (next step): the attack animation and sound, double/half damage by element, and the defense. For now it is plain damage,
+    // just enough to make deaths, replacements and the end of the fight possible.
+    public void ApplyAttack(BattleMonster target, string attack, float amount)
+    {
+        target.monster.health -= amount;
+        CheckDeath();
+
+        // resume
+        UpdateAllMonsters(false);
+    }
+
+    void CheckDeath()
+    {
+        var sprites = new List<BattleMonster>(opponentSprites);
+        sprites.AddRange(playerSprites);
+
+        foreach (var sprite in sprites)
+        {
+            if (sprite.monster.health > 0) continue;
+
+            BattleMonster.NextMonster? next = null;
+            if (sprite.IsPlayer)
+            {
+                // the first party member that is alive and not on the field takes over
+                var available = AvailableMonsters();
+                if (available.Count > 0)
+                    next = new BattleMonster.NextMonster { monster = available[0].monster, index = available[0].index, posIndex = sprite.posIndex, entity = "player" };
+            }
+            else
+            {
+                if (opponentData.Count > 0)
+                {
+                    int first = int.MaxValue;
+                    foreach (var key in opponentData.Keys) first = Mathf.Min(first, key);
+                    next = new BattleMonster.NextMonster { monster = opponentData[first], index = sprite.index, posIndex = sprite.posIndex, entity = "opponent" };
+                    opponentData.Remove(first);
+                }
+
+                // xp
+                float xpAmount = sprite.monster.level * 100f / playerSprites.Count;
+                foreach (var playerSprite in playerSprites) playerSprite.monster.UpdateXp(xpAmount);
+            }
+
+            sprite.DelayedKill(next);
+        }
+    }
+
+    // OpponentAttack: the opponent picks a random ability and a random target
+    void OpponentAttack()
+    {
+        if (currentMonster == null) return;
+        var abilities = currentMonster.monster.GetAbilities();
+        if (abilities.Count == 0) return;
+
+        string ability = abilities[UnityEngine.Random.Range(0, abilities.Count)];
+        var targets = MonsterDatabase.Attacks[ability].target == "player" ? opponentSprites : playerSprites;
+        if (targets.Count == 0) return;
+        currentMonster.ActivateAttack(targets[UnityEngine.Random.Range(0, targets.Count)], ability);
+    }
+
+    void CheckEndBattle()
+    {
+        // opponents have been defeated
+        if (opponentSprites.Count == 0 && !battleOver)
+        {
+            battleOver = true;
+            endBattle(character);
+            foreach (var monster in playerData) monster.initiative = 0;
+        }
+
+        // player has been defeated
+        if (playerSprites.Count == 0)
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+    }
+
+    // BattleSprites.draw: which monsters get the white outline
+    void UpdateOutlines()
+    {
+        BattleMonster targeted = selectionMode == Mode.Target ? TargetSprite(selectionSide) : null;
+
+        foreach (var sprite in AllSprites())
+        {
+            bool current = sprite == currentMonster && !(selectionMode == Mode.Target && selectionSide == "player");
+            bool target = sprite == targeted && sprite.entity == selectionSide && selectionMode == Mode.Target;
+            sprite.SetOutline(current || target);
+        }
     }
 
     public void Destroy()
     {
-        Object.Destroy(root);
+        UnityEngine.Object.Destroy(root);
     }
 }

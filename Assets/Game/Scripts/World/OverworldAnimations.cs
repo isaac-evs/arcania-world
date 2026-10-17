@@ -145,12 +145,13 @@ public class OverworldAnimations : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    public static Texture2D LoadPixelArt(string path)
+    public static Texture2D LoadPixelArt(string path, bool readable = false)
     {
         // Sprite type avoids Unity rescaling non power of two textures (coast.png is 1536x768)
         var importer = (TextureImporter)AssetImporter.GetAtPath(path);
         if (importer != null && (importer.textureType != TextureImporterType.Sprite || importer.filterMode != FilterMode.Point
-            || importer.textureCompression != TextureImporterCompression.Uncompressed || importer.mipmapEnabled))
+            || importer.textureCompression != TextureImporterCompression.Uncompressed || importer.mipmapEnabled
+            || (readable && !importer.isReadable)))
         {
             importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Single;
@@ -158,6 +159,7 @@ public class OverworldAnimations : MonoBehaviour
             importer.filterMode = FilterMode.Point;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
             importer.mipmapEnabled = false;
+            if (readable) importer.isReadable = true; // the battle reads these pixels (outlines, silhouettes, grayscale)
             importer.SaveAndReimport();
         }
         return AssetDatabase.LoadAssetAtPath<Texture2D>(path);

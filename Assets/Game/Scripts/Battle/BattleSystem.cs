@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,7 +13,9 @@ public class BattleSystem : MonoBehaviour
 
     [SerializeField] Font regularFont;           // fonts['regular']: PixeloidSans, 18
     [SerializeField] Font smallFont;             // fonts['small']: PixeloidSans, 14
-    [SerializeField] Texture2D[] monsterSheets;  // graphics/monsters
+    [SerializeField] Texture2D[] monsterSheets;  // graphics/monsters (readable: outlines and silhouettes are made from them)
+    [SerializeField] Texture2D[] monsterIcons;   // graphics/icons
+    [SerializeField] Texture2D[] uiIcons;        // graphics/ui (readable: the unselected choices are drawn in grey)
     [SerializeField] Texture2D[] backgrounds;    // graphics/backgrounds: forest, ice, sand
 
     PlayerController player;
@@ -27,7 +28,6 @@ public class BattleSystem : MonoBehaviour
 
     Battle pending;      // transition_target: built straight away, shown when the screen is black
     Battle battle;       // self.battle
-    bool ending;
 
     // encounter_timer = Timer(2000, func = self.monster_encounter)
     float encounterDuration = 2f;
@@ -41,17 +41,19 @@ public class BattleSystem : MonoBehaviour
     {
         player = FindFirstObjectByType<PlayerController>();
 
-        var idleFrames = new Dictionary<string, Sprite[]>();
-        foreach (var sheet in monsterSheets) idleFrames[sheet.name] = UiKit.CutRow(sheet, 4, 2, 0);
-
         foreach (var texture in backgrounds) backgroundSprites[texture.name] = UiKit.SpriteFrom(texture, new Rect(0, 0, texture.width, texture.height));
 
         assets = new Battle.Assets
         {
-            idleFrames = idleFrames,
             regular = new UiFont(regularFont, 18, 23),
             small = new UiFont(smallFont, 14, 18),
+            sheets = new Dictionary<string, Texture2D>(),
+            ui = new Dictionary<string, Sprite>(),
+            icons = new Dictionary<string, Sprite>(),
         };
+        foreach (var sheet in monsterSheets) assets.sheets[sheet.name] = sheet;
+        foreach (var texture in uiIcons) assets.ui[texture.name] = UiKit.SpriteFrom(texture, new Rect(0, 0, texture.width, texture.height));
+        foreach (var texture in monsterIcons) assets.icons[texture.name] = UiKit.SpriteFrom(texture, new Rect(0, 0, texture.width, texture.height));
 
         BuildCanvas();
     }
@@ -108,13 +110,7 @@ public class BattleSystem : MonoBehaviour
 
         CheckMonster();
 
-        if (battle != null)
-        {
-            battle.Update(dt);
-
-            // TODO: temporary exit while there are no real actions. The real battle ends when one side has no monsters left.
-            if (!ending && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) EndBattle(battle.character);
-        }
+        if (battle != null) battle.Update(dt);
     }
 
     // check_monster: standing in tall grass while walking starts the encounter timer
@@ -174,8 +170,7 @@ public class BattleSystem : MonoBehaviour
         }
 
         // the battle is built straight away (like Battle(...) in main.py) but only shown once the screen is black
-        var battleAssets = new Battle.Assets { background = background, idleFrames = assets.idleFrames, regular = assets.regular, small = assets.small };
-        var created = new Battle(panel, battleAssets, PlayerParty.Monsters, opponents, trainer);
+        var created = new Battle(panel, assets, background, PlayerParty.Monsters, opponents, trainer, EndBattle);
         created.root.name = $"Battle ({biome})";
         created.root.SetActive(false);
         pending = created;
@@ -193,7 +188,6 @@ public class BattleSystem : MonoBehaviour
     // end_battle: back to the map; a defeated trainer talks to you again
     void EndBattle(Character trainer)
     {
-        ending = true;
         // TODO: audio['battle'].stop()
         if (tint == null) tint = FindFirstObjectByType<ScreenTint>();
         var finished = battle;
@@ -201,7 +195,6 @@ public class BattleSystem : MonoBehaviour
         {
             finished.Destroy();
             battle = null;
-            ending = false;
             canvasObject.SetActive(false);
         });
 
@@ -224,15 +217,17 @@ public class BattleSystem : MonoBehaviour
     {
         regularFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/Game/graphics/fonts/PixeloidSans.ttf");
         smallFont = regularFont;
-        monsterSheets = LoadFolder("Assets/Game/graphics/monsters");
-        backgrounds = LoadFolder("Assets/Game/graphics/backgrounds");
+        monsterSheets = LoadFolder("Assets/Game/graphics/monsters", readable: true);
+        monsterIcons = LoadFolder("Assets/Game/graphics/icons", readable: false);
+        uiIcons = LoadFolder("Assets/Game/graphics/ui", readable: true);
+        backgrounds = LoadFolder("Assets/Game/graphics/backgrounds", readable: false);
     }
 
-    static Texture2D[] LoadFolder(string folder)
+    static Texture2D[] LoadFolder(string folder, bool readable)
     {
         var textures = new List<Texture2D>();
         foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { folder }))
-            textures.Add(OverworldAnimations.LoadPixelArt(AssetDatabase.GUIDToAssetPath(guid)));
+            textures.Add(OverworldAnimations.LoadPixelArt(AssetDatabase.GUIDToAssetPath(guid), readable));
         return textures.ToArray();
     }
 #endif
