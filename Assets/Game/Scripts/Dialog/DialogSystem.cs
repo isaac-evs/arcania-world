@@ -126,7 +126,8 @@ public class DialogSystem : MonoBehaviour
         else
         {
             player.Unblock();
-            // TODO: check_evolution()
+            // check_evolution() brings the overworld music back (evolutions themselves are still to do)
+            AudioManager.Play("overworld", loop: true);
         }
     }
 

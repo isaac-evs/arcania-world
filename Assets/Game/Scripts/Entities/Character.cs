@@ -69,7 +69,7 @@ public class Character : Entity
             canRotate = false;
             hasNoticed = true;
             player.noticed = true;
-            // TODO: notice sound (audio isn't imported yet)
+            AudioManager.Play("notice");
         }
     }
 

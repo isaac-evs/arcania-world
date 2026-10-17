@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 // Port of Battle in battle.py: the field, the turn system (initiative), the menus' input, deaths and the end of the fight.
-// The attack itself (animation, sound, element and defense maths) is the next step: see ApplyAttack.
 // Everything is drawn with pygame coordinates in the 1280x720 panel (see UiKit); the menus are in BattleMenus.cs.
 public partial class Battle
 {
@@ -22,6 +21,7 @@ public partial class Battle
         public Dictionary<string, Texture2D> sheets;   // monster sheets by monster name
         public Dictionary<string, Sprite> ui;          // graphics/ui by name
         public Dictionary<string, Sprite> icons;       // graphics/icons by monster name
+        public Dictionary<string, Sprite[]> attacks;   // graphics/attacks by animation name: 4 frames each
 
         readonly Dictionary<string, MonsterFrames> frames = new Dictionary<string, MonsterFrames>();
         readonly Dictionary<Sprite, Sprite> grayscale = new Dictionary<Sprite, Sprite>();
@@ -154,6 +154,7 @@ public partial class Battle
         opponentDelay.Update(dt);
         foreach (var sprite in AllSprites()) sprite.Update(dt); // battle_sprites.update(dt)
         UpdateCrosses(dt);
+        UpdateAttackSprites(dt);
         CheckActive();
 
         // drawing
@@ -323,12 +324,35 @@ public partial class Battle
         foreach (var sprite in AllSprites()) sprite.monster.paused = pause;
     }
 
-    // apply_attack: called when a monster's attack animation ends.
-    // TODO (next step): the attack animation and sound, double/half damage by element, and the defense. For now it is plain damage,
-    // just enough to make deaths, replacements and the end of the fight possible.
+    // apply_attack: called when a monster's attack animation ends
     public void ApplyAttack(BattleMonster target, string attack, float amount)
     {
-        target.monster.health -= amount;
+        var data = MonsterDatabase.Attacks[attack];
+        CreateAttackSprite(target.rect.center, assets.attacks[data.animation]);
+        AudioManager.Play(data.animation);
+
+        // get correct attack damage amount (defense, element)
+        string attackElement = data.element;
+        string targetElement = target.monster.element;
+
+        // double attack
+        if (attackElement == "fire" && targetElement == "plant" ||
+            attackElement == "water" && targetElement == "fire" ||
+            attackElement == "plant" && targetElement == "water")
+            amount *= 2;
+
+        // halve attack
+        if (attackElement == "fire" && targetElement == "water" ||
+            attackElement == "water" && targetElement == "plant" ||
+            attackElement == "plant" && targetElement == "fire")
+            amount *= 0.5f;
+
+        float targetDefense = 1 - target.monster.GetStat("defense") / 2000f;
+        if (target.monster.defending) targetDefense -= 0.2f;
+        targetDefense = Mathf.Max(0, Mathf.Min(1, targetDefense));
+
+        // update the monster health
+        target.monster.health -= amount * targetDefense;
         CheckDeath();
 
         // resume

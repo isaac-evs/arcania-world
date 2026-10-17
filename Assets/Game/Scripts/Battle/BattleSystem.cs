@@ -16,6 +16,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] Texture2D[] monsterSheets;  // graphics/monsters (readable: outlines and silhouettes are made from them)
     [SerializeField] Texture2D[] monsterIcons;   // graphics/icons
     [SerializeField] Texture2D[] uiIcons;        // graphics/ui (readable: the unselected choices are drawn in grey)
+    [SerializeField] Texture2D[] attackSheets;   // graphics/attacks: 4 frames each
     [SerializeField] Texture2D[] backgrounds;    // graphics/backgrounds: forest, ice, sand
 
     PlayerController player;
@@ -50,7 +51,9 @@ public class BattleSystem : MonoBehaviour
             sheets = new Dictionary<string, Texture2D>(),
             ui = new Dictionary<string, Sprite>(),
             icons = new Dictionary<string, Sprite>(),
+            attacks = new Dictionary<string, Sprite[]>(),
         };
+        foreach (var sheet in attackSheets) assets.attacks[sheet.name] = UiKit.CutRow(sheet, 4, 1, 0);
         foreach (var sheet in monsterSheets) assets.sheets[sheet.name] = sheet;
         foreach (var texture in uiIcons) assets.ui[texture.name] = UiKit.SpriteFrom(texture, new Rect(0, 0, texture.width, texture.height));
         foreach (var texture in monsterIcons) assets.icons[texture.name] = UiKit.SpriteFrom(texture, new Rect(0, 0, texture.width, texture.height));
@@ -144,7 +147,8 @@ public class BattleSystem : MonoBehaviour
         var patch = patches[0];
         encounterDuration = Random.Range(800, 2501) / 1000f;
         player.Block();
-        // TODO: audio['overworld'].stop(), audio['battle'].play(-1)
+        AudioManager.Stop("overworld");
+        AudioManager.Play("battle", loop: true);
 
         var opponents = new SortedDictionary<int, Monster>();
         for (int i = 0; i < patch.monsters.Length; i++)
@@ -156,7 +160,8 @@ public class BattleSystem : MonoBehaviour
     // end_dialog, the part for a trainer that is not defeated yet
     public void StartTrainerBattle(Character trainer)
     {
-        // TODO: audio['overworld'].stop(), audio['battle'].play(-1)
+        AudioManager.Stop("overworld");
+        AudioManager.Play("battle", loop: true);
         Begin(trainer.monsters, trainer.data.biome, trainer);
     }
 
@@ -188,7 +193,7 @@ public class BattleSystem : MonoBehaviour
     // end_battle: back to the map; a defeated trainer talks to you again
     void EndBattle(Character trainer)
     {
-        // TODO: audio['battle'].stop()
+        AudioManager.Stop("battle");
         if (tint == null) tint = FindFirstObjectByType<ScreenTint>();
         var finished = battle;
         tint.Begin(() =>
@@ -207,7 +212,8 @@ public class BattleSystem : MonoBehaviour
         else
         {
             player.Unblock();
-            // TODO: check_evolution()
+            // check_evolution() brings the overworld music back (evolutions themselves are still to do)
+            AudioManager.Play("overworld", loop: true);
         }
     }
 
@@ -220,6 +226,7 @@ public class BattleSystem : MonoBehaviour
         monsterSheets = LoadFolder("Assets/Game/graphics/monsters", readable: true);
         monsterIcons = LoadFolder("Assets/Game/graphics/icons", readable: false);
         uiIcons = LoadFolder("Assets/Game/graphics/ui", readable: true);
+        attackSheets = LoadFolder("Assets/Game/graphics/attacks", readable: false);
         backgrounds = LoadFolder("Assets/Game/graphics/backgrounds", readable: false);
     }
 

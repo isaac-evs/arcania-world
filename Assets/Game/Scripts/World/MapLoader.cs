@@ -64,6 +64,7 @@ public class MapLoader : MonoBehaviour
         }
 
         LoadMap(startMap, startPosition);
+        AudioManager.Play("overworld", loop: true); // self.audio['overworld'].play(-1)
     }
 
     void Update()
