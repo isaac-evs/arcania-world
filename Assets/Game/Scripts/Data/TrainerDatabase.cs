@@ -281,4 +281,10 @@ public static class TrainerDatabase
             defeated = false
         } },
     };
+
+    // a new game starts with nobody defeated (the Python game gets this from restarting the program)
+    public static void ResetState()
+    {
+        foreach (var trainer in Trainers.Values) trainer.defeated = false;
+    }
 }

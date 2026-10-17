@@ -21,6 +21,7 @@ public class BattleSystem : MonoBehaviour
 
     PlayerController player;
     DialogSystem dialogSystem;
+    EvolutionSystem evolutionSystem;
     ScreenTint tint;
     GameObject canvasObject;
     RectTransform panel;
@@ -211,9 +212,14 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            player.Unblock();
-            // check_evolution() brings the overworld music back (evolutions themselves are still to do)
-            AudioManager.Play("overworld", loop: true);
+            // elif not self.evolution: self.player.unblock(); self.check_evolution()
+            if (evolutionSystem == null) evolutionSystem = FindFirstObjectByType<EvolutionSystem>();
+            if (evolutionSystem == null || !evolutionSystem.Active)
+            {
+                player.Unblock();
+                if (evolutionSystem != null) evolutionSystem.CheckEvolution();
+                else AudioManager.Play("overworld", loop: true);
+            }
         }
     }
 

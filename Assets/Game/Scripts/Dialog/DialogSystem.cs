@@ -21,6 +21,7 @@ public class DialogSystem : MonoBehaviour
     PlayerController player;
     MonsterIndex monsterIndex;
     BattleSystem battleSystem;
+    EvolutionSystem evolutionSystem;
     Character character;               // the character we are talking to, null when there is no dialog
     string[] lines;
     int lineIndex;
@@ -126,8 +127,9 @@ public class DialogSystem : MonoBehaviour
         else
         {
             player.Unblock();
-            // check_evolution() brings the overworld music back (evolutions themselves are still to do)
-            AudioManager.Play("overworld", loop: true);
+            if (evolutionSystem == null) evolutionSystem = FindFirstObjectByType<EvolutionSystem>();
+            if (evolutionSystem != null) evolutionSystem.CheckEvolution();
+            else AudioManager.Play("overworld", loop: true);
         }
     }
 

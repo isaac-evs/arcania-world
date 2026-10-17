@@ -12,16 +12,12 @@ public class AudioManager : MonoBehaviour
 
     static AudioManager instance;
     readonly Dictionary<string, AudioClip> byName = new Dictionary<string, AudioClip>();
-    readonly Dictionary<string, AudioSource> loops = new Dictionary<string, AudioSource>();
-    AudioSource effects;
+    readonly Dictionary<string, AudioSource> sources = new Dictionary<string, AudioSource>(); // one per sound, like pygame's Sound.stop()
 
     void Awake()
     {
         instance = this;
         foreach (var clip in clips) byName[clip.name] = clip;
-
-        effects = gameObject.AddComponent<AudioSource>();
-        effects.playOnAwake = false;
     }
 
     void OnDestroy()
@@ -29,33 +25,40 @@ public class AudioManager : MonoBehaviour
         if (instance == this) instance = null;
     }
 
-    // Sound.play(): a short sound plays once (and can overlap itself); with loop = true, Sound.play(-1)
+    AudioSource SourceFor(string name, AudioClip clip)
+    {
+        if (!sources.TryGetValue(name, out var source))
+        {
+            source = gameObject.AddComponent<AudioSource>();
+            source.clip = clip;
+            source.playOnAwake = false;
+            sources[name] = source;
+        }
+        return source;
+    }
+
+    // Sound.play(): a sound plays once and can overlap itself; with loop = true it is Sound.play(-1)
     public static void Play(string name, bool loop = false)
     {
         if (instance == null || !instance.byName.TryGetValue(name, out var clip)) return;
 
-        if (!loop)
+        var source = instance.SourceFor(name, clip);
+        if (loop)
         {
-            instance.effects.PlayOneShot(clip);
-            return;
-        }
-
-        // starting a music that is already playing does nothing (the Python game would layer a second copy over the first)
-        if (!instance.loops.TryGetValue(name, out var source))
-        {
-            source = instance.gameObject.AddComponent<AudioSource>();
-            source.clip = clip;
+            // starting a music that is already playing does nothing (the Python game would layer a second copy over the first)
             source.loop = true;
-            source.playOnAwake = false;
-            instance.loops[name] = source;
+            if (!source.isPlaying) source.Play();
         }
-        if (!source.isPlaying) source.Play();
+        else
+        {
+            source.PlayOneShot(clip);
+        }
     }
 
-    // Sound.stop()
+    // Sound.stop(): stops every copy of the sound that is playing
     public static void Stop(string name)
     {
-        if (instance != null && instance.loops.TryGetValue(name, out var source)) source.Stop();
+        if (instance != null && instance.sources.TryGetValue(name, out var source)) source.Stop();
     }
 
 #if UNITY_EDITOR

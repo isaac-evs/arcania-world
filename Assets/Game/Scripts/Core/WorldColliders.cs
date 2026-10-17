@@ -31,4 +31,11 @@ public static class WorldColliders
         return a.xMax > b.xMin + Epsilon && a.xMin < b.xMax - Epsilon
             && a.yMax > b.yMin + Epsilon && a.yMin < b.yMax - Epsilon;
     }
+
+    public static void ResetState()
+    {
+        Rects.Clear();
+        SightBlockers.Clear();
+        MonsterPatches.Clear();
+    }
 }

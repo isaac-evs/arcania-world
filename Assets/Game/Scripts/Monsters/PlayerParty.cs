@@ -15,6 +15,12 @@ public static class PlayerParty
         }
     }
 
+    // a new game starts with a new party
+    public static void ResetState()
+    {
+        monsters = null;
+    }
+
     static void Create()
     {
         monsters = new List<Monster>

@@ -27,6 +27,12 @@ public static class UiKit
 
     static readonly Dictionary<string, Sprite> shapes = new Dictionary<string, Sprite>();
 
+    // the rounded shapes are made at run time, so the cache must not outlive a play session
+    public static void ClearCache()
+    {
+        shapes.Clear();
+    }
+
     public static RectTransform NewRect(Transform parent, string name, float x, float y, float width, float height)
     {
         var go = new GameObject(name, typeof(RectTransform));

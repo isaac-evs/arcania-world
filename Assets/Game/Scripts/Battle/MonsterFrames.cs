@@ -71,7 +71,7 @@ public class MonsterFrames
         return UiKit.SpriteFrom(texture, new Rect(0, 0, width, height));
     }
 
-    static Sprite Silhouette(Sprite sprite)
+    public static Sprite Silhouette(Sprite sprite)
     {
         var mask = ReadMask(sprite, out int width, out int height);
         return FromMask(mask, width, height);
