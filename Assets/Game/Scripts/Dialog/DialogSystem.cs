@@ -108,6 +108,7 @@ public class DialogSystem : MonoBehaviour
                 monster.health = monster.GetStat("max_health");
                 monster.energy = monster.GetStat("max_energy");
             }
+            AudioManager.PlayHealUp();
             player.Unblock();
         }
         else if (!finished.data.defeated)
@@ -129,7 +130,7 @@ public class DialogSystem : MonoBehaviour
             player.Unblock();
             if (evolutionSystem == null) evolutionSystem = FindFirstObjectByType<EvolutionSystem>();
             if (evolutionSystem != null) evolutionSystem.CheckEvolution();
-            else AudioManager.Play("overworld", loop: true);
+            else AudioManager.StartMapMusic();
         }
     }
 

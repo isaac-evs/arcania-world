@@ -148,8 +148,7 @@ public class BattleSystem : MonoBehaviour
         var patch = patches[0];
         encounterDuration = Random.Range(800, 2501) / 1000f;
         player.Block();
-        AudioManager.Stop("overworld");
-        AudioManager.Play("battle", loop: true);
+        AudioManager.PlayBattleMusic("battle_wild");
 
         var opponents = new SortedDictionary<int, Monster>();
         for (int i = 0; i < patch.monsters.Length; i++)
@@ -161,8 +160,7 @@ public class BattleSystem : MonoBehaviour
     // end_dialog, the part for a trainer that is not defeated yet
     public void StartTrainerBattle(Character trainer)
     {
-        AudioManager.Stop("overworld");
-        AudioManager.Play("battle", loop: true);
+        AudioManager.PlayBattleMusic(trainer.IsGymBoss ? "battle_gym_boss" : "battle_trainer");
         Begin(trainer.monsters, trainer.data.biome, trainer);
     }
 
@@ -194,7 +192,8 @@ public class BattleSystem : MonoBehaviour
     // end_battle: back to the map; a defeated trainer talks to you again
     void EndBattle(Character trainer)
     {
-        AudioManager.Stop("battle");
+        // the fight music stops and the victory music of this kind of fight plays
+        AudioManager.PlayVictory(trainer == null ? "wild_defeated" : trainer.IsGymBoss ? "gym_boss_defeated" : "trainer_defeated");
         if (tint == null) tint = FindFirstObjectByType<ScreenTint>();
         var finished = battle;
         tint.Begin(() =>
@@ -218,7 +217,7 @@ public class BattleSystem : MonoBehaviour
             {
                 player.Unblock();
                 if (evolutionSystem != null) evolutionSystem.CheckEvolution();
-                else AudioManager.Play("overworld", loop: true);
+                else AudioManager.StartMapMusic();
             }
         }
     }

@@ -74,13 +74,14 @@ public class EvolutionSystem : MonoBehaviour
             var monster = party[i];
             if (!monster.CanEvolve || monster.level != monster.EvolveLevel) continue;
 
+            AudioManager.StopJingle(); // the victory music gives way to the evolution
             AudioManager.Play("evolution");
             player.Block();
             Begin(monster.name, monster.EvolveInto);
             party[i] = new Monster(monster.EvolveInto, monster.level); // a brand new monster: full health, no xp
         }
 
-        if (!Active) AudioManager.Play("overworld", loop: true);
+        if (!Active) AudioManager.StartMapMusic();
     }
 
     void Begin(string startMonster, string endMonster)
@@ -108,7 +109,7 @@ public class EvolutionSystem : MonoBehaviour
         canvasObject.SetActive(false);
         player.Unblock();
         AudioManager.Stop("evolution");
-        AudioManager.Play("overworld", loop: true);
+        AudioManager.StartMapMusic();
     }
 
     void Update()

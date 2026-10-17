@@ -21,6 +21,9 @@ public class Character : Entity
 
     bool hasMoved, hasNoticed;
     float lookTimer;
+
+    // the three gym leaders: their fights and victories have their own music
+    public bool IsGymBoss => characterId == "fx" || characterId == "wx" || characterId == "px";
     float noticeTimer = -1f; // -1 = inactive
 
     void Update()
@@ -70,6 +73,7 @@ public class Character : Entity
             hasNoticed = true;
             player.noticed = true;
             AudioManager.Play("notice");
+            AudioManager.PlayApproachMusic();
         }
     }
 

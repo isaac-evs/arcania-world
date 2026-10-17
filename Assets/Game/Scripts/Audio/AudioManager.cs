@@ -4,26 +4,76 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-// The sounds of the game: self.audio in main.py (audio_importer loads every file of the audio folder by name).
-// One per scene: add it to the Game object. The other scripts use the static Play and Stop.
+// The sounds and music of the game. self.audio in main.py played one sound per name; this keeps that for the sound effects
+// (Play / Stop) and adds the music: map music that follows the map, fight music, victory music and short jingles.
+// One per scene: add it to the Game object. The other scripts use the static methods.
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField] AudioClip[] clips;   // battle, evolution, explosion, fire, green, ice, notice, overworld, scratch, splash
+    [SerializeField] AudioClip[] clips;   // every file of Assets/Game/audio
 
     static AudioManager instance;
     readonly Dictionary<string, AudioClip> byName = new Dictionary<string, AudioClip>();
-    readonly Dictionary<string, AudioSource> sources = new Dictionary<string, AudioSource>(); // one per sound, like pygame's Sound.stop()
+    // songs that share a name apart from the number (overworld1, overworld2...) form a group that is shuffled
+    readonly Dictionary<string, List<AudioClip>> groups = new Dictionary<string, List<AudioClip>>();
+    readonly Dictionary<string, AudioSource> sources = new Dictionary<string, AudioSource>(); // sound effects, one source per sound
+
+    // music
+    AudioSource music, jingle;
+    string musicName;          // the song or group playing now, null when there is none
+    AudioClip lastClip;
+    bool musicPaused;          // paused while a jingle plays over it
+    bool jingleActive;
+    string mapCategory = "overworld";
+    bool mapMusicWanted;       // the map music should be playing as soon as nothing else is
 
     void Awake()
     {
         instance = this;
-        foreach (var clip in clips) byName[clip.name] = clip;
+        foreach (var clip in clips)
+        {
+            if (clip == null) continue; // a sound that was deleted from the project leaves an empty slot
+
+            byName[clip.name] = clip;
+
+            string baseName = clip.name.TrimEnd('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+            if (baseName.Length == 0) baseName = clip.name;
+            if (!groups.TryGetValue(baseName, out var group)) groups[baseName] = group = new List<AudioClip>();
+            group.Add(clip);
+        }
+
+        music = gameObject.AddComponent<AudioSource>();
+        music.playOnAwake = false;
+        jingle = gameObject.AddComponent<AudioSource>();
+        jingle.playOnAwake = false;
     }
 
     void OnDestroy()
     {
         if (instance == this) instance = null;
     }
+
+    void Update()
+    {
+        // a group plays one song after the other, never the same one twice in a row
+        if (musicName != null && !musicPaused && !music.isPlaying && groups[musicName].Count > 1) PlayNextSong();
+
+        // when a jingle ends: the music underneath carries on, or the map music starts if it was waiting
+        if (jingleActive && !jingle.isPlaying)
+        {
+            jingleActive = false;
+            if (musicPaused)
+            {
+                music.UnPause();
+                musicPaused = false;
+            }
+            else if (mapMusicWanted)
+            {
+                StartMusic(mapCategory);
+            }
+        }
+    }
+
+    // ---- sound effects: Sound.play() / Sound.stop() ----
 
     AudioSource SourceFor(string name, AudioClip clip)
     {
@@ -37,28 +87,146 @@ public class AudioManager : MonoBehaviour
         return source;
     }
 
-    // Sound.play(): a sound plays once and can overlap itself; with loop = true it is Sound.play(-1)
-    public static void Play(string name, bool loop = false)
+    // A sound plays once and can overlap itself (the attack sounds, the notice sound, the evolution jingle)
+    public static void Play(string name)
     {
         if (instance == null || !instance.byName.TryGetValue(name, out var clip)) return;
-
-        var source = instance.SourceFor(name, clip);
-        if (loop)
-        {
-            // starting a music that is already playing does nothing (the Python game would layer a second copy over the first)
-            source.loop = true;
-            if (!source.isPlaying) source.Play();
-        }
-        else
-        {
-            source.PlayOneShot(clip);
-        }
+        instance.SourceFor(name, clip).PlayOneShot(clip);
     }
 
-    // Sound.stop(): stops every copy of the sound that is playing
+    // Stops every copy of the sound that is playing
     public static void Stop(string name)
     {
         if (instance != null && instance.sources.TryGetValue(name, out var source)) source.Stop();
+    }
+
+    // ---- music ----
+
+    // Which music a map has: the world and the house share the overworld songs
+    static string CategoryOf(string mapName)
+    {
+        switch (mapName)
+        {
+            case "hospital":
+            case "hospital2": return "hospital";
+            case "arena":
+            case "fire":
+            case "plant":
+            case "water": return "gym";
+            default: return "overworld";
+        }
+    }
+
+    // The map has changed (the screen is black): the music changes with it when the kind of place changes
+    public static void SetMap(string mapName)
+    {
+        if (instance == null) return;
+        string category = CategoryOf(mapName);
+        bool changed = category != instance.mapCategory;
+        instance.mapCategory = category;
+        if (changed && instance.mapMusicWanted && !instance.jingleActive) instance.StartMusic(category);
+    }
+
+    // The place of the player has its music: what self.audio['overworld'].play(-1) did in main.py.
+    // If a jingle (victory music) is still playing, the map music waits for it to end.
+    public static void StartMapMusic()
+    {
+        if (instance == null) return;
+        instance.mapMusicWanted = true;
+        if (!instance.jingleActive) instance.StartMusic(instance.mapCategory);
+    }
+
+    // A fight starts: everything else goes quiet and the fight music begins. name: battle_wild, battle_trainer or battle_gym_boss
+    public static void PlayBattleMusic(string name)
+    {
+        if (instance == null) return;
+        instance.mapMusicWanted = false;
+        instance.StopJingleNow();
+        instance.StopMusicNow();
+        instance.StartMusic(name);
+    }
+
+    // A trainer has seen the player and walks up
+    public static void PlayApproachMusic()
+    {
+        PlayBattleMusic("trainer_approachs");
+    }
+
+    // The fight is won: the victory music plays once (wild_defeated, trainer_defeated or gym_boss_defeated)
+    public static void PlayVictory(string name)
+    {
+        if (instance == null || !instance.byName.TryGetValue(name, out var clip)) return;
+        instance.StopMusicNow();
+        instance.PlayJingle(clip);
+    }
+
+    // The nurse heals the monsters: a short jingle over the music, which carries on afterwards
+    public static void PlayHealUp()
+    {
+        if (instance == null || !instance.byName.TryGetValue("heal_up", out var clip)) return;
+        if (instance.music.isPlaying)
+        {
+            instance.music.Pause();
+            instance.musicPaused = true;
+        }
+        instance.PlayJingle(clip);
+    }
+
+    public static void StopJingle()
+    {
+        if (instance != null) instance.StopJingleNow();
+    }
+
+    void PlayJingle(AudioClip clip)
+    {
+        jingle.clip = clip;
+        jingle.loop = false;
+        jingle.Play();
+        jingleActive = true;
+    }
+
+    void StopJingleNow()
+    {
+        jingle.Stop();
+        jingleActive = false;
+        if (musicPaused)
+        {
+            music.UnPause();
+            musicPaused = false;
+        }
+    }
+
+    void StopMusicNow()
+    {
+        music.Stop();
+        musicName = null;
+        musicPaused = false;
+    }
+
+    // Starts a song, or a group of songs; does nothing if it is already playing
+    void StartMusic(string name)
+    {
+        if (!groups.ContainsKey(name)) return;
+        if (musicName == name && (music.isPlaying || musicPaused)) return;
+
+        musicName = name;
+        PlayNextSong();
+    }
+
+    void PlayNextSong()
+    {
+        var group = groups[musicName];
+        AudioClip clip = group[0];
+        if (group.Count > 1)
+        {
+            do { clip = group[Random.Range(0, group.Count)]; } while (clip == lastClip);
+        }
+
+        lastClip = clip;
+        music.clip = clip;
+        music.loop = group.Count == 1; // a single song repeats, a group moves on to another song when one ends
+        music.Play();
+        musicPaused = false;
     }
 
 #if UNITY_EDITOR

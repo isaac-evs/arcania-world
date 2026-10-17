@@ -64,7 +64,7 @@ public class MapLoader : MonoBehaviour
         }
 
         LoadMap(startMap, startPosition);
-        AudioManager.Play("overworld", loop: true); // self.audio['overworld'].play(-1)
+        AudioManager.StartMapMusic(); // self.audio['overworld'].play(-1)
     }
 
     void Update()
@@ -112,6 +112,9 @@ public class MapLoader : MonoBehaviour
         PlacePlayer(playerPosition);
         ReadTransitions();
         currentMap.AddComponent<OverworldCharacters>().Build(characterSheets, shadowTexture, player, dialogSystem);
+
+        // hospitals and gyms have their own music; the world and the house share the overworld songs
+        AudioManager.SetMap(mapName);
     }
 
     // 'Entities': the Player object whose 'pos' matches where we come from
