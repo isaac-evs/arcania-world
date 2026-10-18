@@ -14,8 +14,8 @@ public class DuelGame : MonoBehaviour
 {
     const float WindowWidth = 1280f, WindowHeight = 720f;
     const int MaxHealth = 20;
-    const float StrikerLabelShift = 50f;           // the striker's state word sits this far left of its middle
-    const float StrikerX = 486f, GuardianX = 980f;   // where the fighters stand
+    const float StrikerLabelShift = 110f;           // the striker's state word sits this far left of its middle
+    const float StrikerX = 580f, GuardianX = 980f;   // where the fighters stand
 
     public enum Move { Attack, Charge, Defend, Heal }
 
@@ -133,7 +133,6 @@ public class DuelGame : MonoBehaviour
         content.pivot = new Vector2(0.5f, 0.5f);
         content.sizeDelta = new Vector2(WindowWidth, WindowHeight);
 
-        UiKit.Box(content, -640, -360, WindowWidth * 2, WindowHeight * 2, Purple);   // covers any window shape
         var background = Resources.Load<Texture2D>("Duel/arena_background");       // a copy of graphics/backgrounds/arena.jpeg
         if (background != null)
         {
@@ -150,7 +149,12 @@ public class DuelGame : MonoBehaviour
             fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
             fitter.aspectRatio = background.width / (float)background.height;
         }
-        else UiKit.Box(content, 0, 500, WindowWidth, 220, Ground);
+        else
+        {
+            // no picture: plain colours
+            UiKit.Box(content, -640, -360, WindowWidth * 2, WindowHeight * 2, Purple);   // covers any window shape
+            UiKit.Box(content, 0, 500, WindowWidth, 220, Ground);
+        }
 
         striker = new Actor<StrikerState, StrikerSymbol>(StrikerAutomaton.Step, StrikerAutomaton.IsFinal);
         guardian = new Actor<GuardianState, GuardianSymbol>(GuardianAutomaton.Step, GuardianAutomaton.IsFinal);
