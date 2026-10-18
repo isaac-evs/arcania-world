@@ -66,13 +66,28 @@ public class Multiplayer : MonoBehaviour
 
     public bool IsOpen => screen != Screen.Closed;
 
-    // True while the menu is open: everything else in the game ignores the keyboard, so Enter, Space, Escape and the arrows
-    // only do things in the menu
-    public static bool IsMenuOpen { get; private set; }
+    // The other player's map and position, from their last message (used by the duel challenge to see if they are close)
+    public string RemoteMap => remoteMap;
+    public Vector2 RemotePosition { get; private set; }
+
+    // True while the menu is open, or a duel challenge is on: everything else in the game ignores the keyboard, so Enter, Space,
+    // Escape and the arrows only do things there
+    static bool menuOpen;
+    public static bool IsMenuOpen => menuOpen || DuelChallenge.IsActive;
 
     public static void ResetState()
     {
-        IsMenuOpen = false;
+        menuOpen = false;
+    }
+
+    // True when the game is busy with something that owns the keys (a dialogue, a fight, an evolution, the monster index, the title)
+    public bool IsBusyWithGame()
+    {
+        return TitleMenu.IsOpen
+            || (dialogSystem != null && dialogSystem.Active)
+            || (battleSystem != null && battleSystem.Active)
+            || (evolutionSystem != null && evolutionSystem.Active)
+            || (monsterIndex != null && monsterIndex.IsOpen);
     }
 
     void Start()
@@ -91,6 +106,10 @@ public class Multiplayer : MonoBehaviour
         session.Connected += OnConnected;
         session.Disconnected += OnDisconnected;
         session.MessageReceived += OnMessage;
+
+        // the duel challenge between the two players
+        var challenge = gameObject.AddComponent<DuelChallenge>();
+        challenge.Configure(this, session, regularFont);
 
         address = PlayerPrefs.GetString("arcania.lastAddress", address);
         BuildCanvas();
@@ -185,23 +204,19 @@ public class Multiplayer : MonoBehaviour
             return;
         }
 
-        bool busy = TitleMenu.IsOpen
-            || (dialogSystem != null && dialogSystem.Active)
-            || (battleSystem != null && battleSystem.Active)
-            || (evolutionSystem != null && evolutionSystem.Active)
-            || (monsterIndex != null && monsterIndex.IsOpen);
+        bool busy = IsBusyWithGame() || DuelChallenge.IsActive;
         if (busy) return;
 
         player.Block();
         canvasObject.SetActive(true);
-        IsMenuOpen = true;
+        menuOpen = true;
         Go(Screen.Main);
     }
 
     void Close()
     {
         screen = Screen.Closed;
-        IsMenuOpen = false;
+        menuOpen = false;
         canvasObject.SetActive(false);
         player.Unblock();
     }
@@ -454,6 +469,7 @@ public class Multiplayer : MonoBehaviour
             || !Enum.TryParse(parts[4], true, out Direction facing)) return;
 
         remoteMap = parts[1];
+        RemotePosition = new Vector2(x, y);
         if (remote == null) CreateRemote();
         remote?.SetState(new Vector2(x, y), facing);
     }
@@ -516,7 +532,7 @@ public class Multiplayer : MonoBehaviour
 
     void OnDestroy()
     {
-        IsMenuOpen = false;
+        menuOpen = false;
         if (textSubscribed && Keyboard.current != null) Keyboard.current.onTextInput -= OnText;
     }
 

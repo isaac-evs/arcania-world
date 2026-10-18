@@ -14,6 +14,7 @@ public static class GameStateReset
         UiKit.ClearCache();
         TitleMenu.ResetState();
         Multiplayer.ResetState();
+        DuelChallenge.ResetState();
         SaveSystem.ResetState();
     }
 

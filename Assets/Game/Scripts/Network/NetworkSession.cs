@@ -20,6 +20,7 @@ public class NetworkSession : MonoBehaviour
     public State CurrentState { get; private set; }
     public string Status { get; private set; } = "";
     public string HostAddress { get; private set; } = "";   // the address the other player has to type, while hosting
+    public bool IsHost { get; private set; }                // true for the player who hosted, false for the one who joined
 
     public event Action Connected;
     public event Action Disconnected;
@@ -52,6 +53,7 @@ public class NetworkSession : MonoBehaviour
             return;
         }
 
+        IsHost = true;
         HostAddress = LocalAddress();
         Debug.Log($"[Network] Hosting on port {Port}; this computer's addresses: {string.Join(", ", AllAddresses())}");
         CurrentState = State.Hosting;
@@ -78,6 +80,7 @@ public class NetworkSession : MonoBehaviour
             return;
         }
 
+        IsHost = false;
         Debug.Log($"[Network] Connecting to {host}:{port}");
         CurrentState = State.Connecting;
         Status = "Connecting...";
