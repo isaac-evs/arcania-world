@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// The duel challenge between the two connected players (not in the Python game). C challenges the other player when both are close, inside the house;
+// The duel challenge between the two connected players (not in the Python game). C challenges the other player when both are close, inside the arena;
 // they answer with Space (accept) or Escape (decline). Messages: CHALLENGE, ACCEPT, DECLINE, CANCEL, DUELEND.
 // The host is always Player 1 and the guest Player 2, so each side knows its role (and its automaton) without asking.
 // Created by Multiplayer.
@@ -10,7 +10,7 @@ public class DuelChallenge : MonoBehaviour
 {
     const float WindowWidth = 1280f, WindowHeight = 720f;
     const float MaxDistance = 3f;   // in tiles
-    const string DuelMap = "house"; // duels only happen in the empty house next to where the game starts (the map "arena" cannot be reached)
+    const string DuelMap = "house"; // the arena: the empty house next to where the game starts (the file is house.tmx; the map called "arena" cannot be reached)
 
     public enum Phase { None, Sent, Received, InDuel }
 
@@ -126,8 +126,8 @@ public class DuelChallenge : MonoBehaviour
     {
         if (session.CurrentState != NetworkSession.State.Connected) return "Not connected: press + to host or join first";
         if (player == null || mapLoader == null) return "The game is not ready";
-        if (mapLoader.CurrentMapName != DuelMap) return "Duels only happen inside the house next to the start";
-        if (multiplayer.RemoteMap != DuelMap) return "The other player is not in the house";
+        if (mapLoader.CurrentMapName != DuelMap) return "Duels only happen inside the arena (the house next to the start)";
+        if (multiplayer.RemoteMap != DuelMap) return "The other player is not in the arena";
         if (Vector2.Distance(player.transform.position, multiplayer.RemotePosition) > MaxDistance) return "Get closer to the other player";
         return null;
     }
@@ -147,14 +147,17 @@ public class DuelChallenge : MonoBehaviour
 
         if (game == null) game = gameObject.AddComponent<DuelGame>();
         game.Begin(Role, session, regularFont);
+        AudioManager.PlayMusic("arena_battle");
     }
 
     void End()
     {
+        bool wasDuel = Current == Phase.InDuel;
         Current = Phase.None;
         Role = 0;
         Hold(false);
         if (game != null) game.Close();
+        if (wasDuel) AudioManager.StartMapMusic(); // the arena song comes back
     }
 
     // The player stands still while a challenge or duel is on

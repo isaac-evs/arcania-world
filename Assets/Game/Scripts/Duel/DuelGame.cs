@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// The duel itself (not in the Python game): Striker (Cindrill, Player 1 = host) against Guardian (Pluma, Player 2 = guest),
+// The duel itself (not in the Python game): Striker (Charmadillo, Player 1 = host) against Guardian (Pluma, Player 2 = guest),
 // with Jacana as the referee. Each round both players secretly choose a move; when both are in, the host (who decides everything)
 // resolves it and tells the guest what to feed to each automaton, so both screens always show the same states.
 //   Attack beats Charge, Defend beats Attack, Charge beats Defend, Heal restores health unless the other one attacks.
@@ -14,6 +14,7 @@ public class DuelGame : MonoBehaviour
 {
     const float WindowWidth = 1280f, WindowHeight = 720f;
     const int MaxHealth = 20;
+    const float StrikerX = 420f, GuardianX = 980f;   // where the fighters stand
 
     public enum Move { Attack, Charge, Defend, Heal }
 
@@ -64,6 +65,7 @@ public class DuelGame : MonoBehaviour
     string message = "";
     int result = -1;          // -1 = going on, 0 = draw, 1 or 2 = that player won
     bool locked;              // this player already chose this round
+    bool endMusicPlayed;
     string drawn = "";
 
     // the host's bookkeeping
@@ -85,6 +87,7 @@ public class DuelGame : MonoBehaviour
         round = 1;
         result = -1;
         locked = false;
+        endMusicPlayed = false;
         pick1 = pick2 = null;
         message = "";
         drawn = "";
@@ -130,15 +133,30 @@ public class DuelGame : MonoBehaviour
         content.sizeDelta = new Vector2(WindowWidth, WindowHeight);
 
         UiKit.Box(content, -640, -360, WindowWidth * 2, WindowHeight * 2, Purple);   // covers any window shape
-        UiKit.Box(content, 0, 500, WindowWidth, 220, Ground);
+        var background = Resources.Load<Texture2D>("Duel/arena_background");       // a copy of graphics/backgrounds/arena.jpeg
+        if (background != null)
+        {
+            // the picture covers the whole screen whatever its shape: it is cropped, never stretched
+            var picture = new GameObject("Background", typeof(RectTransform)).AddComponent<RawImage>();
+            picture.transform.SetParent(content, false);
+            picture.texture = background;
+            picture.raycastTarget = false;
+            var pictureRect = picture.rectTransform;
+            pictureRect.anchorMin = pictureRect.anchorMax = new Vector2(0.5f, 0.5f);
+            pictureRect.sizeDelta = new Vector2(WindowWidth, WindowHeight);
+            var fitter = picture.gameObject.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fitter.aspectRatio = background.width / (float)background.height;
+        }
+        else UiKit.Box(content, 0, 500, WindowWidth, 220, Ground);
 
         striker = new Actor<StrikerState, StrikerSymbol>(StrikerAutomaton.Step, StrikerAutomaton.IsFinal);
         guardian = new Actor<GuardianState, GuardianSymbol>(GuardianAutomaton.Step, GuardianAutomaton.IsFinal);
         referee = new Actor<RefereeState, RefereeSymbol>(RefereeAutomaton.Step, RefereeAutomaton.IsFinal);
 
         // the sheets face left, like the player's monsters in a fight: the striker on the left is flipped
-        striker.animator = NewActor("Striker", "Striker", 300, 330, 384, flip: true);
-        guardian.animator = NewActor("Guardian", "Guardian", 980, 330, 384, flip: false);
+        striker.animator = NewActor("Striker", "Striker", StrikerX, 330, 384, flip: true);
+        guardian.animator = NewActor("Guardian", "Guardian", GuardianX, 330, 384, flip: false);
         referee.animator = NewActor("Referee", "Referee", 640, 250, 288, flip: false);
 
         hud = UiKit.NewRect(content, "Hud", 0, 0, WindowWidth, WindowHeight);
@@ -174,6 +192,12 @@ public class DuelGame : MonoBehaviour
     void Update()
     {
         if (canvasObject == null) return; // no duel going on
+
+        if (result >= 0 && !endMusicPlayed)
+        {
+            endMusicPlayed = true;
+            AudioManager.PlayVictory("arena_battle_end");
+        }
         var keyboard = Keyboard.current;
         if (keyboard != null && result < 0 && !locked)
         {
@@ -200,9 +224,11 @@ public class DuelGame : MonoBehaviour
 
         Bubble(big, "Arena Duel  -  Round " + round, 20);
 
-        FighterPanel(small, "Player 1 - Striker (Cindrill)", health1, 60, 80, striker.StateName, 300, 540, role == 1);
-        FighterPanel(small, "Player 2 - Guardian (Pluma)", health2, 740, 80, guardian.StateName, 980, 540, role == 2);
+        FighterPanel(small, "Player 1 - Striker (Charmadillo)", health1, 60, 80, striker.StateName, StrikerX, 540, role == 1);
+        FighterPanel(small, "Player 2 - Guardian (Pluma)", health2, 740, 80, guardian.StateName, GuardianX, 540, role == 2);
 
+        float refereeWidth = UiKit.Measure(small, "Referee Jacana: " + referee.StateName) + 24;
+        UiKit.Box(hud, 640 - refereeWidth / 2f, 402, refereeWidth, small.surfaceHeight + 12, new Color(Purple.r, Purple.g, Purple.b, 0.8f), 4);
         UiKit.Label(hud, "Referee Jacana: " + referee.StateName, small, Color.white, Anchor.MidTop, 640, 408);
         Bubble(big, RefereeLine(), 438);
 
@@ -227,6 +253,9 @@ public class DuelGame : MonoBehaviour
     void FighterPanel(UiFont small, string title, int health, float x, float y, string state, float labelX, float labelY, bool mine)
     {
         const float barWidth = 480;
+        UiKit.Box(hud, x - 12, y - 8, barWidth + 24, 90, new Color(Purple.r, Purple.g, Purple.b, 0.8f), 4);
+        float stateWidth = UiKit.Measure(small, "State: " + state) + 24;
+        UiKit.Box(hud, labelX - stateWidth / 2f, labelY - 6, stateWidth, small.surfaceHeight + 12, new Color(Purple.r, Purple.g, Purple.b, 0.8f), 4);
         UiKit.Label(hud, title + (mine ? "  (you)" : ""), small, Color.white, Anchor.TopLeft, x, y);
         UiKit.Bar(hud, x, y + 30, barWidth, 22, health, MaxHealth, UiKit.Hex("#64a990"), Pale, 2);
         UiKit.Label(hud, $"HP {Mathf.Max(0, health)}/{MaxHealth}", small, Color.white, Anchor.TopLeft, x, y + 58);

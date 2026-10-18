@@ -159,7 +159,7 @@ public class AudioManager : MonoBehaviour
 
     // ---- music ----
 
-    // Which music a map has: the world and the house share the overworld songs
+    // Which music a map has: the house is the duel arena and has its own song; everything else outdoors shares the overworld songs
     static string CategoryOf(string mapName)
     {
         switch (mapName)
@@ -170,6 +170,7 @@ public class AudioManager : MonoBehaviour
             case "fire":
             case "plant":
             case "water": return "gym";
+            case "house": return "arena";
             default: return "overworld";
         }
     }
@@ -187,7 +188,9 @@ public class AudioManager : MonoBehaviour
     // The music of the place the player is in: the overworld songs change to their night versions when it is night
     string MapMusicName()
     {
-        return mapCategory == "overworld" && isNight && groups.ContainsKey("overworld_night") ? "overworld_night" : mapCategory;
+        if (mapCategory == "overworld" && isNight && groups.ContainsKey("overworld_night")) return "overworld_night";
+        // a place whose song is not registered (AudioManager not reset after adding it) plays the overworld songs
+        return groups.ContainsKey(mapCategory) ? mapCategory : "overworld";
     }
 
     // Day turns into night or night into day. The overworld song that is playing fades out and a song of the other set fades in,

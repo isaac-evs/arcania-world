@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Menu Arcania > Build Duel Animators. Makes everything the duel's Animators need, from the monster sheets:
-//   - one PNG per frame of Cindrill, Pluma and Jacana (graphics/duel/frames), imported as sprites,
+//   - one PNG per frame of Charmadillo, Pluma and Jacana (graphics/duel/frames), imported as sprites,
 //   - one AnimationClip per state of each automaton (Resources/Duel/Clips): sprite frames plus move / scale / tilt / colour curves,
 //   - one Animator Controller per automaton (Resources/Duel/Striker, Guardian, Referee) whose states are the automaton's states
 //     and whose transitions are the pairs of delta: the tool calls the Step function of DuelAutomata for every state and symbol.
@@ -32,13 +32,20 @@ public static class DuelAssetBuilder
         Directory.CreateDirectory(FramesFolder);
         Directory.CreateDirectory(ClipsFolder);
 
-        var cindrill = CutFrames("Cindrill");
+        var charmadillo = CutFrames("Charmadillo");
         var pluma = CutFrames("Pluma");
         var jacana = CutFrames("Jacana");
 
-        BuildStriker(cindrill);
+        BuildStriker(charmadillo);
         BuildGuardian(pluma);
         BuildReferee(jacana);
+
+        // the duel screen shows the arena picture; Resources.Load can only find it inside a Resources folder
+        File.Copy("Assets/Game/graphics/backgrounds/arena.jpeg", ResourcesFolder + "/arena_background.jpeg", true);
+
+        // frames of a fighter that is no longer used
+        AssetDatabase.DeleteAsset(FramesFolder + "/Cindrill_idle_0.png");
+        foreach (string guid in AssetDatabase.FindAssets("Cindrill_", new[] { FramesFolder })) AssetDatabase.DeleteAsset(AssetDatabase.GUIDToAssetPath(guid));
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
