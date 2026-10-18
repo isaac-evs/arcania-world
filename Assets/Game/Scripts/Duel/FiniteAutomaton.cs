@@ -2,7 +2,7 @@ using System;
 
 // The three finite automata of the duel (not in the Python game). Each one is M = (Q, Sigma, delta, q0, F):
 //   Q      the enum of states        Sigma  the enum of symbols        q0  the first value of the state enum (0)
-//   delta  the Step function below, one `switch` on the state          F   the states that end the automaton (IsFinal)
+//   delta  the Step function of each automaton (a `switch` on the state), in its own script          F   the states that end the automaton (IsFinal)
 // A (state, symbol) pair that no case handles is not in delta: the automaton stays where it is (the symbol is ignored).
 // Every state is an animation of an Animator Controller: the DuelAssetBuilder editor tool reads Step to draw the same
 // states and transitions in the Animator window, and at run time the integer parameter "State" selects the state.
