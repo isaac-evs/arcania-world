@@ -14,7 +14,8 @@ public class DuelGame : MonoBehaviour
 {
     const float WindowWidth = 1280f, WindowHeight = 720f;
     const int MaxHealth = 20;
-    const float StrikerX = 420f, GuardianX = 980f;   // where the fighters stand
+    const float StrikerLabelShift = 50f;           // the striker's state word sits this far left of its middle
+    const float StrikerX = 486f, GuardianX = 980f;   // where the fighters stand
 
     public enum Move { Attack, Charge, Defend, Heal }
 
@@ -138,7 +139,8 @@ public class DuelGame : MonoBehaviour
         {
             // the picture covers the whole screen whatever its shape: it is cropped, never stretched
             var picture = new GameObject("Background", typeof(RectTransform)).AddComponent<RawImage>();
-            picture.transform.SetParent(content, false);
+            picture.transform.SetParent(canvasObject.transform, false);   // the canvas itself, not the 1280 x 720 panel, so it covers the whole window
+            picture.transform.SetAsFirstSibling();
             picture.texture = background;
             picture.raycastTarget = false;
             var pictureRect = picture.rectTransform;
@@ -224,7 +226,7 @@ public class DuelGame : MonoBehaviour
 
         Bubble(big, "Arena Duel  -  Round " + round, 20);
 
-        FighterPanel(small, "Player 1 - Striker (Charmadillo)", health1, 60, 80, striker.StateName, StrikerX, 540, role == 1);
+        FighterPanel(small, "Player 1 - Striker (Charmadillo)", health1, 60, 80, striker.StateName, StrikerX - StrikerLabelShift, 540, role == 1);
         FighterPanel(small, "Player 2 - Guardian (Pluma)", health2, 740, 80, guardian.StateName, GuardianX, 540, role == 2);
 
         float refereeWidth = UiKit.Measure(small, "Referee Jacana: " + referee.StateName) + 24;
