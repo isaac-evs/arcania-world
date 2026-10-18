@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6168a1e24c1ec42829fd95817ad35b7d
+guid: 721e738b4da9d445791b07c0d278fd68
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4280727158762021965
-    second: Cindrill_attack_0_0
+      213: -5408083473613695540
+    second: Charmadillo_attack_0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cindrill_attack_0_0
+      name: Charmadillo_attack_0_0
       rect:
         serializedVersion: 2
-        x: 25
-        y: 35
-        width: 134
-        height: 124
+        x: 1
+        y: 5
+        width: 188
+        height: 187
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3bb5f91545dc794c0800000000000000
-      internalID: -4280727158762021965
+      spriteID: cc55897ebb0a2f4b0800000000000000
+      internalID: -5408083473613695540
       vertices: []
       indices: 
       edges: []
@@ -150,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Cindrill_attack_0_0: -4280727158762021965
+      Charmadillo_attack_0_0: -5408083473613695540
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
