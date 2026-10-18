@@ -501,6 +501,8 @@ public class Multiplayer : MonoBehaviour
 
     // ---- a line of text at the top of the screen ----
 
+    public void Notice(string text) => Toast(text);
+
     void Toast(string text)
     {
         if (toast != null) Destroy(toast);

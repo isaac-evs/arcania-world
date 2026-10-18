@@ -92,7 +92,11 @@ public class DuelChallenge : MonoBehaviour
         switch (Current)
         {
             case Phase.None:
-                if (keyboard != null && keyboard.cKey.wasPressedThisFrame && CanChallenge()) Challenge();
+                if (keyboard != null && keyboard.cKey.wasPressedThisFrame && !multiplayer.IsOpen && !multiplayer.IsBusyWithGame())
+                {
+                    string problem = WhyNot();
+                    if (problem == null) Challenge(); else multiplayer.Notice(problem);
+                }
                 break;
 
             case Phase.Sent:
@@ -117,12 +121,15 @@ public class DuelChallenge : MonoBehaviour
         Refresh();
     }
 
-    bool CanChallenge()
+    // Why a challenge is not possible right now, or null when it is
+    string WhyNot()
     {
-        if (session.CurrentState != NetworkSession.State.Connected) return false;
-        if (multiplayer.IsOpen || multiplayer.IsBusyWithGame() || player == null || mapLoader == null) return false;
-        if (mapLoader.CurrentMapName != DuelMap || multiplayer.RemoteMap != DuelMap) return false;
-        return Vector2.Distance(player.transform.position, multiplayer.RemotePosition) <= MaxDistance;
+        if (session.CurrentState != NetworkSession.State.Connected) return "Not connected: press + to host or join first";
+        if (player == null || mapLoader == null) return "The game is not ready";
+        if (mapLoader.CurrentMapName != DuelMap) return "Duels only happen inside the arena";
+        if (multiplayer.RemoteMap != DuelMap) return "The other player is not in the arena";
+        if (Vector2.Distance(player.transform.position, multiplayer.RemotePosition) > MaxDistance) return "Get closer to the other player";
+        return null;
     }
 
     void Challenge()

@@ -51,6 +51,7 @@ public class DebugOverlay : MonoBehaviour
         text.AppendLine($"colliders: {WorldColliders.Rects.Count}   characters: {FindObjectsByType<Character>(FindObjectsSortMode.None).Length}");
         if (session != null)
             text.AppendLine($"network: {session.CurrentState}  {session.Status}");
+        text.AppendLine($"duel: {DuelChallenge.Current}   role: {DuelChallenge.Role}");
         text.AppendLine($"saves: {Application.persistentDataPath}");
 
         var area = new Rect(10, 10, 760, 200);
